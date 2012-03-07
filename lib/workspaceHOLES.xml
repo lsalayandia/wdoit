@@ -1,0 +1,9 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ws="http://wdoworkspace#" > 
+  <rdf:Description rdf:about="http://wdoworkspace#workspace1">
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/holesanalysis_SAW.owl</ws:hasuri>
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/punch_SAW.owl</ws:hasuri>
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/Holes_Code_WDO.owl</ws:hasuri>
+  </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,407 @@
+<!--
+Copyright (c) 2012, University of Texas at El Paso
+All rights reserved.
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright notice, this 
+  list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, 
+  this list of conditions and the following disclaimer in the documentation 
+  and/or other materials provided with the distribution.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+  POSSIBILITY OF SUCH DAMAGE.
+ */
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY owl "http://www.w3.org/2002/07/owl#">
+  <!ENTITY pml-provenance "http://inference-web.org/2.0/pml-provenance.owl">
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY wdo "http://trust.utep.edu/2.0/wdo.owl">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+]>
+<rdf:RDF xml:base="&wdo;"
+         xmlns:owl="&owl;"
+         xmlns:rdf="&rdf;"
+         xmlns:rdfs="&rdfs;">
+
+<!-- Ontology Information -->
+  <owl:Ontology rdf:about="">
+    <rdfs:comment xml:lang="en">The Workflow-Driven Ontology</rdfs:comment>
+    <rdfs:label xml:lang="en">Workflow-Driven Ontology</rdfs:label>
+    <owl:imports>
+      <owl:Ontology rdf:about="&pml-provenance;"/>
+    </owl:imports>
+    <owl:versionInfo xml:lang="en">Version 2.0 of the Workflow Driven Ontology. Authors: Leonardo Salayandia, Ann Q. Gates, and Paulo Pinheiro da Silva</owl:versionInfo>
+  </owl:Ontology>
+
+<!-- Change log:
+     Version 2.0.0: Aligned to the pmlp ontology. wdo:Data was replaced by pmlp:Information, and wdo:Method was replaced by pmlp:MethodRule.
+                    The intention is to facilitate pml encoding through SAWs, as well as to reuse the same vocabulary of the WDO to query provenace.
+                
+     Version 2.0.1:	Added data property hasSubclassOrder to facilitate the presentation of concept hierarchy trees.
+     Version 2.1.0: Added the class WorkflowDrivenOntology and made the class SemanticAbstractWorkflow a subclass of owl:Ontology. The intention is to subclass the owl:Ontology class as one of these classes to identify the type of OWL document.
+-->
+
+<!-- Classes -->
+  <owl:Class rdf:about="#WorkflowDrivenOntology">
+    <rdfs:comment xml:lang="en">Workflow Driven Ontologies contain process-related concepts.</rdfs:comment>
+    <rdfs:label xml:lang="en">WDO</rdfs:label>
+    <rdfs:subClassOf rdf:resource="&owl;Ontology"/>
+  </owl:Class>
+  
+  <owl:Class rdf:about="&pml-provenance;#Information">
+    <rdfs:comment xml:lang="en">Data and dataset concepts of the domain being modeled. Aligned to the pmlp:Information concept.</rdfs:comment>
+    <rdfs:label xml:lang="en">Data</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#MethodRule"/>
+        <owl:onProperty rdf:resource="#isInputTo"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#MethodRule"/>
+        <owl:onProperty rdf:resource="#isOutputOf"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Information"/>
+        <owl:onProperty rdf:resource="#isComposedOf"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Information"/>
+        <owl:onProperty rdf:resource="#isPartOf"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Source"/>
+        <owl:onProperty rdf:resource="#hasSource"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasSource"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Source"/>
+        <owl:onProperty rdf:resource="#hasSink"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasSink"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#RectangularCoordinate"/>
+        <owl:onProperty rdf:resource="#hasLabelCoordinate"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasLabelCoordinate"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="&pml-provenance;#MethodRule">
+    <rdfs:comment xml:lang="en">Methods, algorithms and other functionality concepts of the domain being modeled. Aligned to the pmlp:MethodRule concept.</rdfs:comment>
+    <rdfs:label xml:lang="en">Method</rdfs:label>
+    <rdfs:subClassOf rdf:resource="#WorkflowNode"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Information"/>
+        <owl:onProperty rdf:resource="#hasInput"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Information"/>
+        <owl:onProperty rdf:resource="#hasOutput"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#SemanticAbstractWorkflow"/>
+        <owl:onProperty rdf:resource="#isDetailedBy"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#isDetailedBy"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#InferenceEngine"/>
+        <owl:onProperty rdf:resource="#hasInferenceEngine"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasInferenceEngine"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#SemanticAbstractWorkflow">
+    <rdfs:comment xml:lang="en">Used to reference Semantic Abstract Workflows as first-class citizens. Workflows are considered abstract because the control flow is not formally specified.</rdfs:comment>
+    <rdfs:label xml:lang="en">Workflow</rdfs:label>
+    <rdfs:subClassOf rdf:resource="&pml-provenance;#MethodRule"/>
+    <rdfs:subClassOf rdf:resource="&owl;Ontology"/>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#MethodRule"/>
+        <owl:onProperty rdf:resource="#isAbstractedBy"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#isAbstractedBy"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Website"/>
+        <owl:onProperty rdf:resource="#hasReport"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&pml-provenance;#Document"/>
+        <owl:onProperty rdf:resource="#hasSupportingDocumentation"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+
+  <owl:Class rdf:about="#RectangularCoordinate">
+    <rdfs:comment xml:lang="en">Used to specify the location of an artifact in a workflow graph.</rdfs:comment>
+    <rdfs:label xml:lang="en">RectCoord</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&xsd;decimal"/>
+        <owl:onProperty rdf:resource="#hasXCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasXCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&xsd;decimal"/>
+        <owl:onProperty rdf:resource="#hasYCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasYCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="&xsd;decimal"/>
+        <owl:onProperty rdf:resource="#hasZCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasZCoordinateValue"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  
+  <owl:Class rdf:about="#WorkflowNode">
+    <rdfs:comment xml:lang="en">Used to classify the concepts that are represented by a node in a workflow graph, and hence have a location given by a coordinate.</rdfs:comment>
+    <rdfs:label xml:lang="en">Node</rdfs:label>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:allValuesFrom rdf:resource="#RectangularCoordinate"/>
+        <owl:onProperty rdf:resource="#hasCoordinate"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+        <owl:onProperty rdf:resource="#hasCoordinate"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  
+  <owl:Class rdf:about="&pml-provenance;#Source">
+    <rdfs:subClassOf rdf:resource="#WorkflowNode"/>
+  </owl:Class>
+
+<!-- Datatype Properties -->
+  <owl:DatatypeProperty rdf:about="#hasXCoordinateValue">
+    <rdfs:domain rdf:resource="#RectangularCoordinate"/>
+    <rdfs:range rdf:resource="&xsd;decimal"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasYCoordinateValue">
+    <rdfs:domain rdf:resource="#RectangularCoordinate"/>
+    <rdfs:range rdf:resource="&xsd;decimal"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasZCoordinateValue">
+    <rdfs:domain rdf:resource="#RectangularCoordinate"/>
+    <rdfs:range rdf:resource="&xsd;decimal"/>
+  </owl:DatatypeProperty>
+  
+  <owl:DatatypeProperty rdf:about="#hasSubclassOrder">
+    <rdfs:domain rdf:resource="#RectangularCoordinate"/>
+    <rdfs:range rdf:resource="&xsd;string"/>
+  </owl:DatatypeProperty>
+
+<!-- Object Properties -->
+  <owl:ObjectProperty rdf:about="#hasCoordinate">
+    <rdfs:comment xml:lang="en">Used to specify layout position information of workflow nodes.</rdfs:comment>
+    <rdfs:label xml:lang="en">has coordinate</rdfs:label>
+    <rdfs:domain rdf:resource="#WorkflowNode"/>
+    <rdfs:range rdf:resource="#RectangularCoordinate"/>
+  </owl:ObjectProperty>
+  
+  <owl:ObjectProperty rdf:about="#hasLabelCoordinate">
+    <rdfs:comment xml:lang="en">Used to specify layout position information of data labels.</rdfs:comment>
+    <rdfs:label xml:lang="en">has coordinate</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="#RectangularCoordinate"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasInput">
+    <rdfs:comment xml:lang="en">Used to specify the pmlp:Information concepts that a pmlp:MethodRule uses as inputs. Inverse of the wdo:isInputTo property.</rdfs:comment>
+    <rdfs:label xml:lang="en">has input</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#MethodRule"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Information"/>
+    <owl:inverseOf rdf:resource="#isInputTo"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isInputTo">
+    <rdfs:comment xml:lang="en">Used to specify the pmlp:MethodRule concepts where a pmlp:Information concept can be used as input.</rdfs:comment>
+    <rdfs:label xml:lang="en">is input to</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#MethodRule"/>
+    <owl:inverseOf rdf:resource="#hasInput"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasOutput">
+    <rdfs:comment xml:lang="en">Used to specify the outputs of a pmlp:MethodRule concept.</rdfs:comment>
+    <rdfs:label xml:lang="en">has output</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#MethodRule"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Information"/>
+    <owl:inverseOf rdf:resource="#isOutputOf"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isOutputOf">
+    <rdfs:comment xml:lang="en">Used to specify the pmlp:MethodRule concepts that generate a given pmlp:Information concept. Inverse of the wdo:hasOutput property.</rdfs:comment>
+    <rdfs:label xml:lang="en">is output of</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#MethodRule"/>
+    <owl:inverseOf rdf:resource="#hasOutput"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasDefaultInstance">
+    <rdfs:comment xml:lang="en">Used to relate default instances to classes used to model process.</rdfs:comment>
+    <rdfs:label xml:lang="en">has default instance</rdfs:label>
+    <rdfs:domain rdf:resource="&owl;OntClass"/>
+    <rdfs:range rdf:resource="&owl;NamedIndividual"/>
+    <owl:inverseOf rdf:resource="#hasOutput"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasSource">
+    <rdfs:comment xml:lang="en">Used to set the pmlp:Source where pmlp:Information can come from. It is similar to the pmlp:hasSource property, except that the pmlp relation captures where it actually came from.</rdfs:comment>
+    <rdfs:label xml:lang="en">has source</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Source"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasSink">
+    <rdfs:comment xml:lang="en">Used to set the pmlp:Source of pmlp:Information can go to.</rdfs:comment>
+    <rdfs:label xml:lang="en">has sink</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Source"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isAbstractedBy">
+    <rdfs:comment xml:lang="en">Used to link an wdo:SemanticAbstractWorkflow instance to a pmlp:MethodRule instance; mechanism to support subworkflows.</rdfs:comment>
+    <rdfs:label xml:lang="en">is abstracted by</rdfs:label>
+    <rdfs:domain rdf:resource="#SemanticAbstractWorkflow"/>
+    <rdfs:range rdf:resource="&pml-provenance;#MethodRule"/>
+    <owl:inverseOf rdf:resource="#isDetailedBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isDetailedBy">
+    <rdfs:comment xml:lang="en">Used to link a pmlp:MethodRule instance to a wdo:SemanticAbstractWorkflow instance; mechanism used to support subworkflows. Inverse of wdo:isAbstractedBy.</rdfs:comment>
+    <rdfs:label xml:lang="en">is detailed by</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#MethodRule"/>
+    <rdfs:range rdf:resource="#SemanticAbstractWorkflow"/>
+    <owl:inverseOf rdf:resource="#isAbstractedBy"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isComposedOf">
+    <rdfs:comment xml:lang="en">Used to specify abstractions between pmlp:Information concepts, e.g., Coordinate is composed of Latitude and Longitude.</rdfs:comment>
+    <rdfs:label xml:lang="en">is composed of</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Information"/>
+    <owl:inverseOf rdf:resource="#isPartOf"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#isPartOf">
+    <rdfs:comment xml:lang="en">Used to specify abstractions between pmlp:Information concepts, e.g., Latitude is part of Coordinate, and Longitude is part of Coordinate. Inverse of wdo:isComposedOf.</rdfs:comment>
+    <rdfs:label xml:lang="en">is part of</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#Information"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Information"/>
+    <owl:inverseOf rdf:resource="#isComposedOf"/>
+  </owl:ObjectProperty>
+  
+  <owl:ObjectProperty rdf:about="#hasInferenceEngine">
+    <rdfs:comment xml:lang="en">Used to set the pmlp:InferenceEngine of a pmlp:MethodRule instance.</rdfs:comment>
+    <rdfs:label xml:lang="en">has inference engine</rdfs:label>
+    <rdfs:domain rdf:resource="&pml-provenance;#MethodRule"/>
+    <rdfs:range rdf:resource="&pml-provenance;#InferenceEngine"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasReport">
+    <rdfs:comment xml:lang="en">Used to set the HTML report generated for a WDO or a SAW.</rdfs:comment>
+    <rdfs:label xml:lang="en">has report</rdfs:label>
+    <rdfs:domain rdf:resource="&owl;Ontology"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Website"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasSupportingDocumentation">
+    <rdfs:comment xml:lang="en">Used to set supporting documentation for a SAW.</rdfs:comment>
+    <rdfs:label xml:lang="en">has supporting documentation</rdfs:label>
+    <rdfs:domain rdf:resource="#SemanticAbstractWorkflow"/>
+    <rdfs:range rdf:resource="&pml-provenance;#Document"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

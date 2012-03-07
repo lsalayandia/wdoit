@@ -1,0 +1,12 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://cybershare.utep.edu/wdo#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:bk="http://bookmark#" > 
+  <rdf:Description rdf:about="http://bookmark#uri_s">
+    <bk:hasbookmark>http://trust.utep.edu/2009/HolesCode/HolesCodeSAW.owl</bk:hasbookmark>
+    <rdf:type rdf:resource="http://bookmark#BookmarkList"/>
+  </rdf:Description>
+</rdf:RDF>
+

@@ -1,0 +1,11 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ws="http://wdoworkspace#" > 
+  <rdf:Description rdf:about="http://wdoworkspace#workspace1">
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/DoChipGif_SAW.owl</ws:hasuri>
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/mkChipGif_SAW.owl</ws:hasuri>
+    <ws:hasuri>http://dataportal.ucar.edu/schemas/mlso.owl</ws:hasuri>
+    <ws:hasuri>http://dataportal.ucar.edu/schemas/vsto.owl</ws:hasuri>
+    <ws:hasuri>http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/Quicklook_WDO.owl</ws:hasuri>
+  </rdf:Description>
+</rdf:RDF>

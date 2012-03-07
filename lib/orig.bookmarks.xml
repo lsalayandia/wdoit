@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rdf:RDF [
+  <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
+  <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#">
+  ]>
+
+
+<rdf:RDF xml:base="http://bookmark#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+	xmlns:bk="http://bookmark#">
+
+<!-- bookmarks are maintained as lists, a group of ontologies (WDO and corresponding MBWs) -->
+<!-- uri_s is just a list of individual ontologies - not a list of them                    -->
+<!--     *************************************************************                     -->
+<rdf:Description rdf:about="http://bookmark#uri_s">
+    <bk:hasbookmark rdf:resource="http://www.co-ode.org/ontologies/pizza/pizza_20041007.owl"/>
+    <bk:hasbookmark rdf:resource="http://protege.stanford.edu/plugins/owl/owl-library/koala.owl"/>
+    <rdf:type rdf:resource="http://bookmark#BookmarkList"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://bookmark#Quicklook_CHIP">
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/DoChipGif_SAW.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/mkChipGif_SAW.owl"/>
+    <bk:hasbookmark rdf:resource="http://dataportal.ucar.edu/schemas/mlso.owl"/>
+    <bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Quicklook/Quicklook_WDO.owl"/>
+    <bk:type rdf:resource="http://bookmark#BookmarkList"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://bookmark#holes">
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/holesanalysis_SAW.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/punch_SAW.owl"/>
+    <bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/HolesCode/Holes_Code_WDO.owl"/>
+    <bk:type rdf:resource="http://bookmark#BookmarkList"/>
+</rdf:Description>
+
+<rdf:Description rdf:about="http://bookmark#testWDO">
+    <bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/2008/10/firstMBW.owl"/>
+    <bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/2008/10/secondMBW.owl"/>
+    <bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/2008/10/agtestWDO.owl"/>
+    <bk:type rdf:resource="http://bookmark#BookmarkList"/>
+</rdf:Description>
+
+<!--     Santonu Process Juan Carlos                                   -->
+<!--     ***************************************************           -->
+<rdf:Description rdf:about="http://bookmark#SantonuProcess">
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Environmental/MultiTram_Data_Collection.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Environmental/Gathering_Data.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/Environmental/santonu.owl"/>
+    <rdf:type rdf:resource="http://cybershare.utep.edu/wdo#BookmarkList"/>
+</rdf:Description>
+
+
+<!--     Crustal Modeling Leo                                          -->
+<!--     ***************************************************           -->
+<rdf:Description rdf:about="http://bookmark#CrustalModeling">
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/CrustalModeling/CreateCrustalModel.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/CrustalModeling/ProfileLineDetermination.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/CrustalModeling/MagneticContouring.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/CrustalModeling/GravityContouring.owl"/>
+	<bk:hasbookmark rdf:resource="http://trust.cs.utep.edu/1.0/sawprojects/CrustalModeling/CrustalModeling.owl"/>
+    <rdf:type rdf:resource="http://cybershare.utep.edu/wdo#BookmarkList"/>
+</rdf:Description>
+
+
+</rdf:RDF>

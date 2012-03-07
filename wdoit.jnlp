@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2012, University of Texas at El Paso
+All rights reserved.
+Redistribution and use in source and binary forms, with or without 
+modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright notice, this 
+  list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, 
+  this list of conditions and the following disclaimer in the documentation 
+  and/or other materials provided with the distribution.
+  
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+  POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<!-- JNLP File for WDOIt -->
+<jnlp  spec="1.0+"  codebase="http://trust.cs.utep.edu/wdo/downloads/latest2"  href="wdoit.jnlp">
+	<information>
+		<title>WDOIt Application</title>
+		<vendor>CyberShARE Center of Excellence</vendor>
+		<homepage href="http://trust.cs.utep.edu/wdo"/>
+		<description>WDO-It Application</description>
+		<description kind="short">An editor for Workflow-Driven Ontologies and Model-Based Workflows.</description>
+		<!--<icon href="appcode/images/wdoit-icon.PNG"/>-->
+		<offline-allowed/>
+		<shortcut online="false">
+			<desktop/>
+			<menu submenu="CyberShARE apps"/>
+		</shortcut>
+	</information>
+	<security>
+		<all-permissions/>
+	</security>
+	<resources>
+		<j2se version="1.6+" java-vm-args="-esa -Xnoclassgc"/>
+		<jar href="appcode/wdo.jar"/>
+		<jar href="appcode/lib/activation-1.0.2.jar"/>
+		<jar href="appcode/lib/appframework-1.0.3.jar"/>
+		<jar href="appcode/lib/arq-2.8.3.jar"/>
+		<jar href="appcode/lib/aterm-java-1.6.jar"/>
+		<jar href="appcode/lib/axis-1.4.jar"/>
+		<jar href="appcode/lib/axis-wsdl4j-1.5.1.jar"/>
+		<jar href="appcode/lib/ciclient.jar"/>
+		<jar href="appcode/lib/commons-codec-1.4.jar"/>
+		<jar href="appcode/lib/commons-discovery-0.2.jar"/>
+		<jar href="appcode/lib/dataAnnotator.jar"/>
+		<jar href="appcode/lib/icu4j-3.4.4.jar"/>
+		<jar href="appcode/lib/iri-0.7.jar"/>
+		<jar href="appcode/lib/jaxrpc-api-1.1.jar"/>
+		<jar href="appcode/lib/jcl-over-slf4j-1.5.8.jar"/>
+		<jar href="appcode/lib/jena-2.6.2.jar"/>
+		<jar href="appcode/lib/jgraph.jar"/>
+		<jar href="appcode/lib/jgrapht-jdk1.5-0.7.3.jar"/>
+		<jar href="appcode/lib/junit-4.5.jar"/>
+		<jar href="appcode/lib/log4j-1.2.14.jar"/>
+		<jar href="appcode/lib/lucene-core-2.3.1.jar"/>
+		<jar href="appcode/lib/pellet-2.0.jar"/>
+		<jar href="appcode/lib/pml-lightweight.jar"/>
+		<jar href="appcode/lib/relaxngDatatype-20020414.jar"/>
+		<jar href="appcode/lib/saaj-api-1.2.jar"/>
+		<jar href="appcode/lib/slf4j-api-1.5.8.jar"/>
+		<jar href="appcode/lib/slf4j-log4j12-1.5.8.jar"/>
+		<jar href="appcode/lib/soap.jar"/>
+		<jar href="appcode/lib/stax-api-1.0.1.jar"/>
+		<jar href="appcode/lib/swing-worker-1.1.jar"/>
+		<jar href="appcode/lib/upnp-1.0.jar"/>
+		<jar href="appcode/lib/wstx-asl-3.2.9.jar"/>
+		<jar href="appcode/lib/ws-commons-util-1.0.2.jar"/>		
+		<jar href="appcode/lib/xercesImpl-2.7.1.jar"/>
+		<jar href="appcode/lib/xmlrpc-client-3.1.2.jar"/>
+		<jar href="appcode/lib/xmlrpc-common-3.1.2.jar"/>
+		<jar href="appcode/lib/xsdlib-20030225.jar"/>
+	</resources>
+	<application-desc main-class="edu.utep.cybershare.wdoit.WdoApp">
+	</application-desc>
+</jnlp>

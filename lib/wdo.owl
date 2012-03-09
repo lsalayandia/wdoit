@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 Copyright (c) 2012, University of Texas at El Paso
 All rights reserved.
@@ -22,8 +23,6 @@ modification, are permitted provided that the following conditions are met:
   POSSIBILITY OF SUCH DAMAGE.
  */
 -->
-
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rdf:RDF [
   <!ENTITY owl "http://www.w3.org/2002/07/owl#">
   <!ENTITY pml-provenance "http://inference-web.org/2.0/pml-provenance.owl">

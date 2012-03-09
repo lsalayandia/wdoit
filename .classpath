@@ -1,47 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/lib/jena262/arq-2.8.3.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/icu4j-3.4.4.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/iri-0.7.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/jena-2.6.2.jar" sourcepath="C:/tmp/jena-2.6.2/jena-2.6.2-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/tmp/jena-2.6.2/doc/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/lib/jena262/log4j-1.2.14.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/stax-api-1.0.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/xercesImpl-2.7.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jgraph/jgraph.jar" sourcepath="/JGraph/lib/jgraph.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/pellet-2.0.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/aterm-java-1.6.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/relaxngDatatype-20020414.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/xsdlib-20030225.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/wstx-asl-3.2.9.jar"/>
-	<classpathentry kind="lib" path="/lib/swing/appframework-1.0.3.jar"/>
-	<classpathentry kind="lib" path="/lib/swing/swing-worker-1.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/lucene-core-2.3.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/junit-4.5.jar"/>
-	<classpathentry kind="lib" path="/lib/data-annotator/dataAnnotator.jar"/>
-	<classpathentry kind="lib" path="/lib/pml2/pml-lightweight.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/activation-1.0.2.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/axis-1.4.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/commons-discovery-0.2.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/jaxrpc-api-1.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/saaj-api-1.2.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/axis-wsdl4j-1.5.1.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/jcl-over-slf4j-1.5.8.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/jgrapht-jdk1.5-0.7.3.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/slf4j-api-1.5.8.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/slf4j-log4j12-1.5.8.jar"/>
-	<classpathentry kind="lib" path="/lib/jena262/upnp-1.0.jar"/>
-	<classpathentry kind="lib" path="/lib/ciclient/ciclient.jar"/>
-	<classpathentry kind="lib" path="/lib/apache/xmlrpc-common-3.1.2.jar"/>
-	<classpathentry kind="lib" path="/lib/apache/commons-codec-1.4.jar"/>
-	<classpathentry kind="lib" path="/lib/apache/ws-commons-util-1.0.2.jar"/>
-	<classpathentry kind="lib" path="/lib/apache/xmlrpc-client-3.1.2.jar"/>
-	<classpathentry kind="lib" path="/lib/util/soap.jar"/>
+	<classpathentry kind="lib" path="lib/activation-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/appframework-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/arq-2.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/aterm-java-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/axis-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/axis-wsdl4j-1.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/ciclient.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="lib/dataAnnotator.jar"/>
+	<classpathentry kind="lib" path="lib/icu4j-3.4.4.jar"/>
+	<classpathentry kind="lib" path="lib/iri-0.7.jar"/>
+	<classpathentry kind="lib" path="lib/jaxrpc-api-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jcl-over-slf4j-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/jena-2.6.2.jar"/>
+	<classpathentry kind="lib" path="lib/jgraph.jar"/>
+	<classpathentry kind="lib" path="lib/jgrapht-jdk1.5-0.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-2.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/pellet-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/pml-lightweight.jar"/>
+	<classpathentry kind="lib" path="lib/relaxngDatatype-20020414.jar"/>
+	<classpathentry kind="lib" path="lib/saaj-api-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/soap.jar"/>
+	<classpathentry kind="lib" path="lib/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/swing-worker-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/upnp-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/ws-commons-util-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/wstx-asl-3.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl-2.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/xsdlib-20030225.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

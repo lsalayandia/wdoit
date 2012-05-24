@@ -64,7 +64,7 @@ public class EditNamespace extends JDialog {
 
 	private javax.swing.JButton cancelButton;
 	private NamespaceTextField nsBody;
-	private javax.swing.JComboBox nsProtocol;
+	private javax.swing.JComboBox<String> nsProtocol;
 	private javax.swing.JButton okButton;
 	private javax.swing.JLabel titleLabel;
 	private javax.swing.JLabel warningLabel;
@@ -168,7 +168,7 @@ public class EditNamespace extends JDialog {
 		okButton = new javax.swing.JButton();
 		cancelButton = new javax.swing.JButton();
 		warningLabel = new javax.swing.JLabel();
-		nsProtocol = new javax.swing.JComboBox();
+		nsProtocol = new javax.swing.JComboBox<String>();
 
 		ResourceMap resourceMap = Application.getInstance(WdoApp.class)
 				.getContext().getResourceMap(EditNamespace.class);
@@ -207,7 +207,7 @@ public class EditNamespace extends JDialog {
 		for (int i = 0; i < protocols.length; i++) {
 			options[i] = protocols[i].toString();
 		}
-		nsProtocol.setModel(new javax.swing.DefaultComboBoxModel(options));
+		nsProtocol.setModel(new javax.swing.DefaultComboBoxModel<String>(options));
 		nsProtocol.setRenderer(new nsProtocolListCellRenderer());
 		nsProtocol.setName("nsProtocol"); // NOI18N
 

@@ -103,7 +103,7 @@ modification, are permitted provided that the following conditions are met:
 		<!-- copy jars and other files to distribution lib folder -->
 		<copy todir="${wdo_dist}/lib">
 			<fileset dir="${lib}/apache" includes="commons-codec-1.4.jar,ws-commons-util-1.0.2.jar,xmlrpc-client-3.1.2.jar,xmlrpc-common-3.1.2.jar" />
-			<fileset dir="${lib}/ciclient" defaultexcludes="yes" />
+<!-- exclude ciserver for now			<fileset dir="${lib}/ciclient" defaultexcludes="yes" /> -->
 			<fileset dir="${lib}/data-annotator" defaultexcludes="yes" />
 			<fileset dir="${lib}/jena262" defaultexcludes="yes" />
 			<fileset dir="${lib}/jgraph" includes="jgraph.jar" />
@@ -114,7 +114,8 @@ modification, are permitted provided that the following conditions are met:
 		</copy>	
 		<!-- create wdo jar -->
 		<manifest file="${wdo_dist}/MANIFEST.MF">
-			<attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\ciclient.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>
+<!-- exclude ciserver for now	<attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\ciclient.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>-->
+			                    <attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Main-Class" value="edu.utep.cybershare.wdoit.WdoApp"/>
 		</manifest>
@@ -132,7 +133,7 @@ modification, are permitted provided that the following conditions are met:
 		<signjar jar="${wdo_dist}/lib/aterm-java-1.6.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
 		<signjar jar="${wdo_dist}/lib/axis-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
 		<signjar jar="${wdo_dist}/lib/axis-wsdl4j-1.5.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/ciclient.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<!-- exclude ciserver for now <signjar jar="${wdo_dist}/lib/ciclient.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>-->
 		<signjar jar="${wdo_dist}/lib/commons-codec-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
 		<signjar jar="${wdo_dist}/lib/commons-discovery-0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
 		<signjar jar="${wdo_dist}/lib/dataAnnotator.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>

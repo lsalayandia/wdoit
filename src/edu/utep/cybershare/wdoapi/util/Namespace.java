@@ -26,7 +26,8 @@ package edu.utep.cybershare.wdoapi.util;
 /**
  * Utility class to verify namespaces assigned to OWL documents.
  * 
- * namespace :- protocol://body protocol :- http | https | ftp | ftps | file
+ * namespace :- protocol://body 
+ * protocol :- http | https | ftp | ftps | file
  * body :- nspart | nspart/body nspart :- word | word-nspart | word.nspart word
  * :- sequence of letters and numbers
  * 
@@ -49,7 +50,7 @@ public class Namespace {
 	};
 
 	private static final String protocolRegEx = "http|https|ftp|ftps|file";
-	private static final String nsPartRegEx = "[a-zA-Z0-9]+((\\-|\\.|\\_|\\%20)[a-zA-Z0-9]+)*";
+	private static final String nsPartRegEx = "[a-zA-Z0-9]+((\\-|\\.|\\_|\\%20|\\:)[a-zA-Z0-9]+)*";
 
 	/**
 	 * Verify that the given namespace is valid. Namespace is expected to be of

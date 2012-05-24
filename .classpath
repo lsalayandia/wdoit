@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="lib/aterm-java-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/axis-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/axis-wsdl4j-1.5.1.jar"/>
-	<classpathentry kind="lib" path="lib/ciclient.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-discovery-0.2.jar"/>
 	<classpathentry kind="lib" path="lib/dataAnnotator.jar"/>
@@ -38,5 +37,6 @@
 	<classpathentry kind="lib" path="lib/xmlrpc-client-3.1.2.jar"/>
 	<classpathentry kind="lib" path="lib/xmlrpc-common-3.1.2.jar"/>
 	<classpathentry kind="lib" path="lib/xsdlib-20030225.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1_2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

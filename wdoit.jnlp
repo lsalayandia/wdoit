@@ -50,7 +50,7 @@ modification, are permitted provided that the following conditions are met:
 		<jar href="appcode/lib/aterm-java-1.6.jar"/>
 		<jar href="appcode/lib/axis-1.4.jar"/>
 		<jar href="appcode/lib/axis-wsdl4j-1.5.1.jar"/>
-		<jar href="appcode/lib/ciclient.jar"/>
+<!-- exclude ciserver for now		<jar href="appcode/lib/ciclient.jar"/>-->
 		<jar href="appcode/lib/commons-codec-1.4.jar"/>
 		<jar href="appcode/lib/commons-discovery-0.2.jar"/>
 		<jar href="appcode/lib/dataAnnotator.jar"/>

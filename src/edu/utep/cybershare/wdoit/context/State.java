@@ -33,7 +33,7 @@ import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
-import edu.utep.cybershare.ciclient.ciconnect.CIClient;
+//import edu.utep.cybershare.ciclient.ciconnect.CIClient;
 import edu.utep.cybershare.wdoapi.SAW;
 import edu.utep.cybershare.wdoapi.Workspace;
 import edu.utep.cybershare.wdoapi.Bookmarks;
@@ -60,7 +60,7 @@ public class State {
 	private OntModel selectedWorkflow; // workflow being edited
 	private OntClass selectedClass; // class being edited
 	private OntClass selectedIndividual; // individual being edited
-	private CIClient connectedCIServer; // a connection to a CI Server
+//	private CIClient connectedCIServer; // a connection to a CI Server
 
 	private String loadURI; // URI of an owl document to load
 
@@ -77,7 +77,7 @@ public class State {
 		// bookmarks = null;
 		showWorkflowTypes = true;
 		resetWorkspace();
-		connectedCIServer = null; // no server connection initially
+//		connectedCIServer = null; // no server connection initially
 	}
 
 	/**
@@ -209,16 +209,16 @@ public class State {
 	/**
 	 * Initiates the workspace with an empty Wdo with the given name space
 	 * 
-	 * @param ns
-	 *            Name space of the new Wdo
+	 * @param ns Name space of the new Wdo
+	 * @param url Location where the new WDO will be stored
 	 * @return The new Wdo ontmodel, or null if the workspace was already
 	 *         initiated.
 	 */
-	public OntModel createWDO(String ns) throws Exception {
+	public OntModel createWDO(String ns, String url) throws Exception {
 		if (workspace == null && ns != null) {
 			// namespace verification already in place, no need to check. Leo.
 			workspace = new Workspace();
-			OntModel ontmodel = workspace.createBaseWDO(ns);
+			OntModel ontmodel = workspace.createBaseWDO(ns, url);
 			setSelectedOntology(ontmodel);
 			wdoNextDataNum = 1;
 			wdoNextMethodNum = 1;
@@ -881,13 +881,13 @@ public class State {
 	/**
 	 * Create a workflow for the target class specified.
 	 * 
-	 * @param uri
-	 *            The URI for the new workflow
+	 * @param uri The URI for the new workflow
+	 * @param url The location where the new workflow will be stored.          
 	 * @return An OntModel for the newly created workflow.
 	 */
-	public OntModel createWorkflow(String ns) {
+	public OntModel createWorkflow(String ns, String url) {
 		// namespace verification already in place, no need to check. Leo.
-		OntModel ontmodel = workspace.Saw.createSAW(ns);
+		OntModel ontmodel = workspace.Saw.createSAW(ns, url);
 		this.setSelectedWorkflow(ontmodel);
 		return ontmodel;
 	}
@@ -1304,18 +1304,18 @@ public class State {
 		return (workspace == null);
 	}
 
-	public CIClient getSelectedCIServer() {
-		return connectedCIServer;
-	}
-
-	/**
-	 * Set the connected server value to the one the system is or is not
-	 * connected to (also used to clear the setting)
-	 * 
-	 * @param ontmodel
-	 */
-	public void setSelectedCIServer(CIClient aClient) {
-		this.connectedCIServer = aClient;
-	}
+//	public CIClient getSelectedCIServer() {
+//		return connectedCIServer;
+//	}
+//
+//	/**
+//	 * Set the connected server value to the one the system is or is not
+//	 * connected to (also used to clear the setting)
+//	 * 
+//	 * @param ontmodel
+//	 */
+//	public void setSelectedCIServer(CIClient aClient) {
+//		this.connectedCIServer = aClient;
+//	}
 
 }

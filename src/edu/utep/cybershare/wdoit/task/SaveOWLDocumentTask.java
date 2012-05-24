@@ -37,6 +37,7 @@ import org.jdesktop.application.Task;
 import com.hp.hpl.jena.ontology.OntModel;
 
 import edu.utep.cybershare.wdoapi.Workspace;
+import edu.utep.cybershare.wdoapi.util.Namespace;
 import edu.utep.cybershare.wdoit.WdoApp;
 import edu.utep.cybershare.wdoit.context.State;
 import edu.utep.cybershare.wdoit.ui.WdoView;
@@ -90,6 +91,7 @@ public class SaveOWLDocumentTask extends Task<Void, Void> {
 		State state = State.getInstance();
 		Iterator<OntModel> docIter = documentsToSave.iterator();
 		Iterator<String> urlIter = urlsToSave.iterator();
+		WdoView wdoView = (WdoView) WdoApp.getApplication().getMainView();
 		for (; docIter.hasNext();) {
 
 			OntModel ontmodel = docIter.next();
@@ -98,6 +100,11 @@ public class SaveOWLDocumentTask extends Task<Void, Void> {
 			String url = saveAs ? promptForFile(uri) : urlIter.next();
 			try {
 				state.saveOWLDocument(ontmodel, url);
+				if (url.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+					// upload temp file created to web server
+					File file = new File(System.getProperty("user.home") + File.separator + "wdoit.temp");
+					wdoView.getAlfrescoClient().updateFile(url, file);					
+				}
 			} catch (Exception ex) {
 				// ex.printStackTrace();
 				url = promptForFile(uri);

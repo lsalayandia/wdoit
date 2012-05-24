@@ -25,12 +25,12 @@ package edu.utep.cybershare.wdoapi;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
+//import java.io.FileWriter;
+//import java.io.StringWriter;
+//import java.io.Writer;
+//import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -44,7 +44,7 @@ import com.hp.hpl.jena.ontology.OntModelSpec;
 import com.hp.hpl.jena.ontology.Ontology;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFWriter;
+//import com.hp.hpl.jena.rdf.model.RDFWriter;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
@@ -52,18 +52,18 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import edu.utep.cybershare.wdoapi.metamodel.WDO_Metamodel;
 import edu.utep.cybershare.wdoapi.util.Namespace;
 
-import edu.utep.cybershare.ws.RDFAggregater.RDFAggregater;
-import edu.utep.cybershare.ws.RDFAggregater.RDFAggregater_Service;
+//import edu.utep.cybershare.ws.RDFAggregater.RDFAggregater;
+//import edu.utep.cybershare.ws.RDFAggregater.RDFAggregater_Service;
 
-import edu.utep.cybershare.ciclient.CIGet;
-import edu.utep.cybershare.ciclient.CIPut;
-import edu.utep.cybershare.ciclient.CIReturnObject;
-import edu.utep.cybershare.ciclient.CIUtils;
-import edu.utep.cybershare.ciclient.ciconnect.CIClient;
-import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
-import edu.utep.cybershare.ciclient.ciconnect.CIServerCache;
-import edu.utep.cybershare.ciclient.ciui.CIGetProjectListDialog;
-import edu.utep.cybershare.ciclient.ciui.CIGetUP;
+//import edu.utep.cybershare.ciclient.CIGet;
+//import edu.utep.cybershare.ciclient.CIPut;
+//import edu.utep.cybershare.ciclient.CIReturnObject;
+//import edu.utep.cybershare.ciclient.CIUtils;
+//import edu.utep.cybershare.ciclient.ciconnect.CIClient;
+//import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
+//import edu.utep.cybershare.ciclient.ciconnect.CIServerCache;
+//import edu.utep.cybershare.ciclient.ciui.CIGetProjectListDialog;
+//import edu.utep.cybershare.ciclient.ciui.CIGetUP;
 
 /**
  * @author Leonardo Salayandia
@@ -80,7 +80,7 @@ public class Workspace {
 	public SAW Saw;
 	public Data Data;
 	public Method Method;
-	private CIServerCache ciCache;
+//	private CIServerCache ciCache;
 
 	/**
 	 * Initialize the workspace
@@ -111,7 +111,7 @@ public class Workspace {
 		Saw = new SAW(this);
 		Data = new Data(this);
 		Method = new Method(this);
-		ciCache = CIServerCache.getInstance();
+//		ciCache = CIServerCache.getInstance();
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class Workspace {
 	 *            The URI for the new Wdo
 	 * @return The new Base Wdo of this workspace
 	 */
-	public OntModel createBaseWDO(String uri) throws NotFoundException {
+	public OntModel createBaseWDO(String uri, String url) throws NotFoundException {
 		OntModel ontmodel = ModelFactory.createOntologyModel(ontModelSpec);
 
 		Ontology ont = ontmodel.createOntology(uri);
@@ -139,6 +139,9 @@ public class Workspace {
 		OntDocumentManager docmgr = ontModelSpec.getDocumentManager();
 		docmgr.addModel(uri, ontmodel);
 		docmgr.addIgnoreImport(uri);
+		if (url != null) {
+			docmgr.addAltEntry(uri, url);	
+		}
 
 		initializeBaseWDO(ontmodel);
 
@@ -178,8 +181,8 @@ public class Workspace {
 			else {
 				// this cache is informational - keeping track
 				// of the opened files/servers for saving later
-				if (url.toLowerCase().startsWith("http:"))
-					ciCache.hashURL(url);
+//				if (url.toLowerCase().startsWith("http:"))
+//					ciCache.hashURL(url);
 				ontmodel = ModelFactory.createOntologyModel(ontModelSpec);
 				ontmodel.read(url, uri, null);
 				String docURI = this.getOntModelURI(ontmodel);
@@ -599,223 +602,141 @@ public class Workspace {
 				}
 			}
 			String uri = getOntModelURI(ontmodel);
-
-			// if the uri is found on a ciserver - save there
-			// serverId is an identifier for a particular server known within
-			// the ciclient api
-			CIServerCache ciCache = CIServerCache.getInstance();
-			CIKnownServerTable ciServers = CIKnownServerTable.getInstance();
-
-			String lurl = url.toLowerCase();
-			int serverId = -1;
-			boolean saved = false;
-
-			if (lurl.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
-				// we know this is an http address
-				serverId = ciCache.getServerFromURL(uri);
-//<<<<<<< Workspace.java
-				// String projectName = CIUtils.ciGetProjectName(uri);
-//=======
-//>>>>>>> 1.3
-				String resourceName = CIUtils.ciGetResourceName(uri);
-				if (serverId != -1) {
-					// the uri is from a known server
-					// let's assure we have a connection
-					if (ciServers.ciGetServerAuthSession(serverId) == null) {
-						if (!ciServers.ciIsUsernamePasswordSet(serverId)) {
-							CIGetUP.showDialog(null, serverId);
-						}
-					}
-					CIClient ciclient = new CIClient(serverId);
-
-					// name the file
-					// Get today's date
-					SimpleDateFormat formatter = new SimpleDateFormat(
-							"yyyyMMdd_HH_mm_ss");
-					String dts = formatter.format(new Date());
-//<<<<<<< Workspace.java
-//					String filename = resourceName + dts;
-
-					// File file = File.createTempFile(projectName+filename,
-					// ".out");
-					// AIDA, replaced this line based on your edits to wdo
-					// project
-//=======
-					String filename = resourceName + dts; 	
-					
-					/* replaced with new code to upload a file
-					// there are no local backups anymore
->>>>>>> 1.3
-					File file = File.createTempFile(filename, ".out");
-<<<<<<< Workspace.java
-					FileOutputStream fstream = new FileOutputStream(
-							file.getAbsolutePath(), false);
-					ontmodel.getBaseModel().write(fstream, null, null);
-=======
-					FileOutputStream fstream = new FileOutputStream(file.getAbsolutePath(), false);
-					System.out.println("temp to "+file.getAbsolutePath());
-					ontmodel.write(fstream, null, null);
->>>>>>> 1.3
-					fstream.close();
-<<<<<<< Workspace.java
-					String data = CIUtils.ciReadFileAsString(file
-							.getAbsolutePath());
-					String[] temp = url.split("/");
-
-					if (temp.length > 0) {
-						// if error throw new
-						// Exception("could not save at server "+url);
-						// if this is a new object - create it first ...... aaah
-						// I don't know
-						// what type it is - should have created it already???
-						// CIReturnObject cro = CIGet.ciGetResourceId(ciclient,
-						// projectName, resourceName);
-						// AIDA, replaced this line based on your edits to wdo
-						// project
-						CIReturnObject cro = CIGet.ciGetResourceIdFromURL(
-								ciclient, url);
-=======
-					String data = CIUtils.ciReadFileAsString(file.getAbsolutePath());
-					*/
-					
-					// no local saves
-					Writer sw = new StringWriter();
-					ontmodel.write(sw, null, null);
-					String data = sw.toString();
-					String[] temp = url.split("/");			
-					
-					if(temp.length > 0){
-						CIReturnObject cro = CIGet.ciGetResourceIdFromURL(ciclient, url);
-//>>>>>>> 1.3
-						// a status of 0 means it was found
-//<<<<<<< Workspace.java
-						// AIDA: replaced all this block of code by the code
-						// below based on your edits to wdo project
-						// if(cro.gStatus.equals("0")){
-						// cro = CIPut.ciUploadFile(ciclient, projectName,
-						// resourceName, data, "", false, false);
-						// if(cro.gStatus.compareTo("0")!= 0){
-						// throw new Exception("Could not save to server: " +
-						// url);
-						// }
-						// }
-						// else{
-						// // there was an error
-						// // resourceId of -1 means it was not found at the
-						// server
-						// // we are creating a new one
-						// if(cro.gResourceId.equals("-1")){
-						// if(isWorkflow(ontmodel)) {
-						// cro = CIPut.ciUploadFile(ciclient, projectName,
-						// resourceName, data, CIClient.SAW_TYPE, true, false);
-						// }
-						// else {
-						// // if it is not a workflow, it must be a wdo we are
-						// creating
-						// cro = CIPut.ciUploadFile(ciclient, projectName,
-						// resourceName, data, CIClient.WDO_TYPE, true, false);
-						// }
-						// if (!cro.gStatus.equals("0")) {
-						// throw new Exception("Could not save to server: " +
-						// url);
-						// }
-						// }
-						// else {
-						// throw new Exception("Could not save to server: " +
-						// url);
-						// }
-						// }
-//						if (cro.gStatus.equals("0")) {
-//							if (isWorkflow(ontmodel)) {
-//								cro = CIPut.ciUploadFileForURL(ciclient, url,
-//										data, false);
+//			String lurl = url.toLowerCase();
+//			int serverId = -1;
+//			boolean saved = false;
+//
+//			if (lurl.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+//				
+//				// if the uri is found on a ciserver - save there
+//				// serverId is an identifier for a particular server known within
+//				// the ciclient api
+//				CIServerCache ciCache = CIServerCache.getInstance();
+//				CIKnownServerTable ciServers = CIKnownServerTable.getInstance();
+//
+//				// we know this is an ht`tp address
+//				serverId = ciCache.getServerFromURL(uri);
+//				String resourceName = CIUtils.ciGetResourceName(uri);
+//				// String projectName = CIUtils.ciGetProjectName(uri);
+//				if (serverId != -1) {
+//					// the uri is from a known server
+//					// let's assure we have a connection
+//					if (ciServers.ciGetServerAuthSession(serverId) == null) {
+//						if (!ciServers.ciIsUsernamePasswordSet(serverId)) {
+//							CIGetUP.showDialog(null, serverId);
+//						}
+//					}
+//					CIClient ciclient = new CIClient(serverId);
+//
+//					// name the file
+//					// Get today's date
+//					SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
+//					String dts = formatter.format(new Date());
+//					
+//					// no local saves
+//					Writer sw = new StringWriter();
+//					ontmodel.write(sw, null, null);
+//					String data = sw.toString();
+//					String[] temp = url.split("/");			
+//					
+//					if(temp.length > 0){
+//						CIReturnObject cro = CIGet.ciGetResourceIdFromURL(ciclient, url);
+//						if(cro.gStatus.equals("0")){
+//							if(isWorkflow(ontmodel)) {
+//								cro = CIPut.ciUploadFileForURL(ciclient, url, data, false);
+//							}
+//							else  {
+//								// if it is not a workflow, it must be a wdo we are creating
+//								cro = CIPut.ciUploadFileForURL(ciclient, url, data, false);
+//							}
+//							if (cro.gStatus.compareTo("0") != 0) {
+//								throw new Exception(
+//										"Could not save to server: " + url);
+//							}
+//						} else {
+//							// an error with a resource id of -1 means the
+//							// resource was not found
+//							if (cro.gResourceId.equals("-1")) {
+//								// for a new item need to know the project to
+//								// add it to
+//								String projectName = CIGetProjectListDialog
+//										.showDialog(null, null, ciclient);
+//								if (projectName != null
+//										&& !projectName.isEmpty()) {
+//									if (isWorkflow(ontmodel)) {
+//										cro = CIPut.ciUploadFile(ciclient,
+//												projectName, resourceName,
+//												data, CIClient.SAW_TYPE, true,
+//												false);
+//									} else {
+//										// if it is not a workflow, it must be a
+//										// wdo we are creating
+//										cro = CIPut.ciUploadFile(ciclient,
+//												projectName, resourceName,
+//												data, CIClient.WDO_TYPE, true,
+//												false);
+//									}
+//									if (!cro.gStatus.equals("0")) {
+//										throw new Exception(
+//												"Could not save to server: "
+//														+ url);
+//									}
+//									System.out.println("url was " + url
+//											+ " file url was " + cro.gFileURL);
+//								} else {
+//									throw new Exception(
+//											"Must select a project to save to server: "
+//													+ url);
+//								}
 //							} else {
-//								// if it is not a workflow, it must be a wdo we
-//								// are creating
-//								cro = CIPut.ciUploadFileForURL(ciclient, url,
-//										data, false);
-//=======
-						if(cro.gStatus.equals("0")){
-							if(isWorkflow(ontmodel)) {
-								cro = CIPut.ciUploadFileForURL(ciclient, url, data, false);
-							}
-							else  {
-								// if it is not a workflow, it must be a wdo we are creating
-								cro = CIPut.ciUploadFileForURL(ciclient, url, data, false);
-//>>>>>>> 1.3
-							}
-							if (cro.gStatus.compareTo("0") != 0) {
-								throw new Exception(
-										"Could not save to server: " + url);
-							}
-						} else {
-							// an error with a resource id of -1 means the
-							// resource was not found
-							if (cro.gResourceId.equals("-1")) {
-								// for a new item need to know the project to
-								// add it to
-								String projectName = CIGetProjectListDialog
-										.showDialog(null, null, ciclient);
-								if (projectName != null
-										&& !projectName.isEmpty()) {
-									if (isWorkflow(ontmodel)) {
-										cro = CIPut.ciUploadFile(ciclient,
-												projectName, resourceName,
-												data, CIClient.SAW_TYPE, true,
-												false);
-									} else {
-										// if it is not a workflow, it must be a
-										// wdo we are creating
-										cro = CIPut.ciUploadFile(ciclient,
-												projectName, resourceName,
-												data, CIClient.WDO_TYPE, true,
-												false);
-									}
-									if (!cro.gStatus.equals("0")) {
-										throw new Exception(
-												"Could not save to server: "
-														+ url);
-									}
-									System.out.println("url was " + url
-											+ " file url was " + cro.gFileURL);
-								} else {
-									throw new Exception(
-											"Must select a project to save to server: "
-													+ url);
-								}
-							} else {
-								throw new Exception(
-										"Could not save to server: " + url);
-							}
-						}
-						saved = true;
-
-						// trigger the triple store service
-						RDFAggregater_Service Service = new RDFAggregater_Service();
-						RDFAggregater proxy = Service
-								.getRDFAggregaterHttpPort();
-						if (proxy == null
-								|| !proxy.addDocumentAt(uri, dts + "@wdoit")
-										.equalsIgnoreCase("SUCCESS")) {
-							throw new Exception(
-									"File saved to server but triple store could not be notified.");
-						}
-					}
-				}
+//								throw new Exception(
+//										"Could not save to server: " + url);
+//							}
+//						}
+//						saved = true;
+//
+//						// trigger the triple store service
+//						RDFAggregater_Service Service = new RDFAggregater_Service();
+//						RDFAggregater proxy = Service
+//								.getRDFAggregaterHttpPort();
+//						if (proxy == null
+//								|| !proxy.addDocumentAt(uri, dts + "@wdoit")
+//										.equalsIgnoreCase("SUCCESS")) {
+//							throw new Exception(
+//									"File saved to server but triple store could not be notified.");
+//						}
+//					}
+//				}
+//			}
+//			
+//			// if saving to remote server failed or if the URL has a file protocol, save to local file
+//			if (!saved) {
+//				String filename = (url.startsWith(Namespace.NS_PROTOCOLS.file
+//						.toString())) ? url.substring(5) : url;
+//				FileOutputStream file = new FileOutputStream(filename, false);
+//				ontmodel.getBaseModel().write(file, null, null);
+//				file.close();
+//			}
+			
+			FileOutputStream fileout;
+			if (url.startsWith(Namespace.NS_PROTOCOLS.file.toString())) {
+				fileout = new FileOutputStream(url.substring(5), false);
 			}
-
-			if (!saved) {
-				String filename = (url.startsWith(Namespace.NS_PROTOCOLS.file
-						.toString())) ? url.substring(5) : url;
-				FileOutputStream file = new FileOutputStream(filename, false);
-				ontmodel.getBaseModel().write(file, null, null);
-				file.close();
+			else {
+				File file = new File(System.getProperty("user.home") + File.separator + "wdoit.temp");
+				file.deleteOnExit();
+				fileout = new FileOutputStream(file, false);
 			}
+			ontmodel.getBaseModel().write(fileout, null, null);
+			fileout.close();
+			
+			
+			
+			
 
+			// register latest saved URL with the URI of the model
 			ontModelSpec.getDocumentManager().addAltEntry(uri, url);
-
-			// upload the file
-			// if not successful - send exception
+			// update the modified bit for this model
 			setModified(uri, false);
 		}
 	}

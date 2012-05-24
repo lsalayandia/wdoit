@@ -63,8 +63,8 @@ import com.hp.hpl.jena.ontology.Individual;
 import com.hp.hpl.jena.ontology.OntClass;
 import com.hp.hpl.jena.ontology.OntModel;
 
-import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
-import edu.utep.cybershare.ciclient.ciui.CIGetResourceSaveLocationDialog;
+//import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
+//import edu.utep.cybershare.ciclient.ciui.CIGetResourceSaveLocationDialog;
 import edu.utep.cybershare.wdoapi.SAW;
 import edu.utep.cybershare.wdoapi.Workspace;
 import edu.utep.cybershare.wdoit.WdoApp;
@@ -442,40 +442,41 @@ public class CreateProvenanceAnnotators extends JDialog {
 		// String path = CIGetResourceSaveLocationDialog.showDialog(this,
 		// this,""); //URI
 		// AIDA: I replaced this line based on your edits to the wdo project
-		String path = CIGetResourceSaveLocationDialog.showDialog(this, this,
-				"test", "pmlj"); // URI
-		if (path.equals("Local Filesystem")) {
-			String defaultdir = pmlOutputPath.getText();
-			if (defaultdir == null || defaultdir.isEmpty()) {
-				defaultdir = baseDirPath.getText();
-			}
-			JFileChooser fc = new JFileChooser(
-					(defaultdir == null || defaultdir.isEmpty()) ? null
-							: defaultdir);
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			fc.setMultiSelectionEnabled(false);
-			ResourceMap resourceMap = Application.getInstance(WdoApp.class)
-					.getContext()
-					.getResourceMap(CreateProvenanceAnnotators.class);
-			fc.setDialogTitle(resourceMap
-					.getString("browsePMLOutputPath.Action.title"));
-			if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-				path = fc.getSelectedFile().getAbsolutePath();
-			}
+		//		String path = CIGetResourceSaveLocationDialog.showDialog(this, this,
+		//				"test", "pmlj"); // URI
+		//		if (path.equals("Local Filesystem")) {
+		String path = "";
+		String defaultdir = pmlOutputPath.getText();
+		if (defaultdir == null || defaultdir.isEmpty()) {
+			defaultdir = baseDirPath.getText();
 		}
-
-		int CIServerID = CIKnownServerTable.getInstance()
-				.ciGetServerEntryFromURL(path);
-
-		if (CIServerID != -1) {
-			String username = CIKnownServerTable.getInstance()
-					.ciGetServerUsername(CIServerID);
-			String pass = CIKnownServerTable.getInstance().ciGetServerPassword(
-					CIServerID);
-
-			CIServerCreds = username + "," + pass;
-			path = CIKnownServerTable.getInstance().ciGetServerURL(CIServerID);
+		JFileChooser fc = new JFileChooser(
+				(defaultdir == null || defaultdir.isEmpty()) ? null
+						: defaultdir);
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		ResourceMap resourceMap = Application.getInstance(WdoApp.class)
+				.getContext()
+				.getResourceMap(CreateProvenanceAnnotators.class);
+		fc.setDialogTitle(resourceMap
+				.getString("browsePMLOutputPath.Action.title"));
+		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			path = fc.getSelectedFile().getAbsolutePath();
 		}
+		//		}
+
+		//		int CIServerID = CIKnownServerTable.getInstance()
+		//				.ciGetServerEntryFromURL(path);
+		//
+		//		if (CIServerID != -1) {
+		//			String username = CIKnownServerTable.getInstance()
+		//					.ciGetServerUsername(CIServerID);
+		//			String pass = CIKnownServerTable.getInstance().ciGetServerPassword(
+		//					CIServerID);
+		//
+		//			CIServerCreds = username + "," + pass;
+		//			path = CIKnownServerTable.getInstance().ciGetServerURL(CIServerID);
+		//		}
 		pmlOutputPath.setText(path);
 	}
 

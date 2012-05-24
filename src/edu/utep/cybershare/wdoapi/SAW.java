@@ -629,7 +629,7 @@ public class SAW {
 	 *            The URI to use as the OntModel's base URI
 	 * @return The newly created SAW
 	 */
-	public OntModel createSAW(String uri) {
+	public OntModel createSAW(String uri, String url) {
 		OntModel saw = null;
 		if (uri != null && !uri.isEmpty()) {
 			// initialize SAW ontmodel
@@ -652,6 +652,9 @@ public class SAW {
 					.getDocumentManager();
 			docmgr.addModel(uri, saw);
 			docmgr.addIgnoreImport(uri);
+			if (url != null) {
+				docmgr.addAltEntry(uri, url);	
+			}
 
 			// create SAW SAW-instance
 			OntClass sawsawInstance = createSAWInstance(saw, sawcls, null,

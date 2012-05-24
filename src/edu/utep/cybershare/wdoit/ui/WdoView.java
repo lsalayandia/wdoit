@@ -23,15 +23,17 @@ modification, are permitted provided that the following conditions are met:
  */
 package edu.utep.cybershare.wdoit.ui;
 
+import edu.utep.cybershare.util.AlfrescoClient;
 import edu.utep.cybershare.wdoit.ui.WFTalkFrame;
 
-import edu.utep.cybershare.ciclient.ciconnect.CIClient;
-import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
-import edu.utep.cybershare.ciclient.ciconnect.CIServerCache;
-import edu.utep.cybershare.ciclient.ciui.CIDesktop;
-import edu.utep.cybershare.ciclient.ciui.CINewResourceNameDialog;
+//import edu.utep.cybershare.ciclient.ciconnect.CIClient;
+//import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
+//import edu.utep.cybershare.ciclient.ciconnect.CIServerCache;
+//import edu.utep.cybershare.ciclient.ciui.CIDesktop;
+//import edu.utep.cybershare.ciclient.ciui.CINewResourceNameDialog;
 
 import edu.utep.cybershare.wdoapi.metamodel.WDO_Metamodel;
+import edu.utep.cybershare.wdoapi.util.Namespace;
 import edu.utep.cybershare.wdoapi.SAW;
 import edu.utep.cybershare.wdoapi.WDO;
 import edu.utep.cybershare.wdoapi.Workspace;
@@ -156,8 +158,8 @@ public class WdoView extends FrameView {
 	private javax.swing.JButton toolBarRemoveConcept;
 	private javax.swing.JButton toolBarSave;
 	private javax.swing.JButton toolBarSaveAll;
-	private javax.swing.JButton toolBarWFTalk;
-	private javax.swing.JButton toolBarCIDesktop;
+//	private javax.swing.JButton toolBarWFTalk;
+//	private javax.swing.JButton toolBarCIDesktop;
 	private javax.swing.JToolBar.Separator toolBarSeparator1;
 	private javax.swing.JToolBar.Separator toolBarSeparator2;
 	private javax.swing.JMenu toolsMenu;
@@ -210,7 +212,17 @@ public class WdoView extends FrameView {
 										// workspace has been modified
 	private boolean ciServerConnected; // is the system currently connected to a
 										// ci-server
+	
+	// alfresco client vars
+	private AlfrescoClient aClient;
+//	private String username, password;
+//	private String selectedServerSTR;
+//	private String selectedProjectSTR;
+//	private String selectedOntologySTR = null;
+//	private javax.swing.JLabel selectedProjectLabel;
+//	private javax.swing.JLabel selectedServerLabel;
 
+	
 	public WdoView(SingleFrameApplication app, String initURI) {
 		super(app);
 
@@ -830,43 +842,47 @@ public class WdoView extends FrameView {
 		ResourceMap resourceMap = Application.getInstance(WdoApp.class)
 				.getContext().getResourceMap(WdoView.class);
 		// Show a list of where this can be saved
-		CIKnownServerTable kst = CIKnownServerTable.getInstance();
-		Object[] possibilities = new String[kst.ciKnownServerTableSize() + 1];
-		int i = 0;
-		// TODO: use resourcemap to get this string - used below as well
-		possibilities[0] = (Object) new String("Local Filesystem");
-		for (; i < kst.ciKnownServerTableSize(); i++)
-			possibilities[i + 1] = (Object) kst.ciGetServerURL(i);
-		// TODO: use resource map for messagaes - used in create workspace too
-		String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
-				"Select where you would like to create the WDO?",
-				// resourceMap.getString("createNewWDO.Action.confirm.title"),
-				"Select Server", JOptionPane.PLAIN_MESSAGE, null,
-				possibilities, possibilities[0]);
+//		CIKnownServerTable kst = CIKnownServerTable.getInstance();
+//		Object[] options = new String[kst.ciKnownServerTableSize() + 1];
+		Object[] options = new String[2];
+		options[0] = resourceMap.getString("createNew.Action.locationOption1"); // default option
+		options[1] = resourceMap.getString("createNew.Action.locationOption2");
+//		int i = 0;
+//		for (; i < kst.ciKnownServerTableSize(); i++)
+//			options[i + 1] = (Object) kst.ciGetServerURL(i);
 
+		String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
+				resourceMap.getString("createNew.Action.locationConfirm"),
+				resourceMap.getString("createNew.Action.locationTitle"), 
+				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 		if (ns != null && !ns.isEmpty()) {
-			if (ns.equals("Local Filesystem")) {
+			if (ns.equals((String) options[0])) {
 				JFrame mainFrame = WdoApp.getApplication().getMainFrame();
 				EditNamespace editNamespaceWindow = new EditNamespace(
 						mainFrame,
 						resourceMap.getString("createNewWDO.Action.confirm"));
 				ns = editNamespaceWindow.getNamespace();
 			} else {
+				AlfrescoClient ac = getAlfrescoClient();
+				ns = ac.createNode();
 				// select the project and add a resource name
 				// ns = CINewResourceNameDialog.showDialog(this.getComponent(),
 				// this.getComponent(), ns);
-				// AIDA, I replaced this line based on your edits to the wdo
-				// project.
-				ns = CINewResourceNameDialog.showDialog(this.getComponent(),
-						this.getComponent(), ns, CIClient.WDO_TYPE);
+//				ns = CINewResourceNameDialog.showDialog(this.getComponent(),
+//						this.getComponent(), ns, CIClient.WDO_TYPE);
 			}
 		}
 
 		if (ns != null && !ns.isEmpty()) {
 			try {
-				State.getInstance().createWDO(ns);
-				if (ns.toLowerCase().startsWith("http:"))
-					CIServerCache.getInstance().hashURL(ns);
+				if (ns.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+					State.getInstance().createWDO(ns, ns);
+				}
+				else {
+					State.getInstance().createWDO(ns, null);	
+				}
+//				if (ns.toLowerCase().startsWith("http:"))
+//					CIServerCache.getInstance().hashURL(ns);
 				this.updateSelectedOWLDoc();
 				this.setMessage(resourceMap
 						.getString("createNewWDO.Action.success"));
@@ -884,22 +900,22 @@ public class WdoView extends FrameView {
 		ResourceMap resourceMap = Application.getInstance(WdoApp.class)
 				.getContext().getResourceMap(WdoView.class);
 		// Show a list of where this can be saved
-		CIKnownServerTable kst = CIKnownServerTable.getInstance();
-		Object[] possibilities = new String[kst.ciKnownServerTableSize() + 1];
-		int i = 0;
-		// TODO: use resourcemap to get this string - used below as well
-		possibilities[0] = (Object) new String("Local Filesystem");
-		for (; i < kst.ciKnownServerTableSize(); i++)
-			possibilities[i + 1] = (Object) kst.ciGetServerURL(i);
-		// TODO: use resource map for messagaes - used in create workspace too
+//		CIKnownServerTable kst = CIKnownServerTable.getInstance();
+//		Object[] options = new String[kst.ciKnownServerTableSize() + 1];
+		Object[] options = new String[2];
+		options[0] = resourceMap.getString("createNew.Action.locationOption1"); // default option
+		options[1] = resourceMap.getString("createNew.Action.locationOption2");
+//		int i = 0;
+//		options[0] = (Object) new String("Local Filesystem");
+//		for (; i < kst.ciKnownServerTableSize(); i++)
+//			options[i + 1] = (Object) kst.ciGetServerURL(i);
 		String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
-				"Select where would you like to create the workflow?",
-				// resourceMap.getString("createNewWDO.Action.confirm.title"),
-				"Select Server", JOptionPane.PLAIN_MESSAGE, null,
-				possibilities, possibilities[0]);
+				resourceMap.getString("createNew.Action.locationConfirm"),
+				resourceMap.getString("createNew.Action.locationTitle"), 
+				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
 		if (ns != null && !ns.isEmpty()) {
-			if (ns.equals("Local Filesystem")) {
+			if (ns.equals((String) options[0])) {
 				JFrame mainFrame = WdoApp.getApplication().getMainFrame();
 				EditNamespace editNamespaceWindow = new EditNamespace(
 						mainFrame,
@@ -907,13 +923,15 @@ public class WdoView extends FrameView {
 								.getString("createNewWorkflow.Action.confirm"));
 				ns = editNamespaceWindow.getNamespace();
 			} else {
+				AlfrescoClient ac = getAlfrescoClient();
+				ns = ac.createNode();
 				// select the project and add a resource name
 				// ns = CINewResourceNameDialog.showDialog(this.getComponent(),
 				// this.getComponent(), ns);
 				// AIDA, I replaced this line based on your edits to the wdo
 				// project.
-				ns = CINewResourceNameDialog.showDialog(this.getComponent(),
-						this.getComponent(), ns, CIClient.SAW_TYPE);
+//				ns = CINewResourceNameDialog.showDialog(this.getComponent(),
+//						this.getComponent(), ns, CIClient.SAW_TYPE);
 			}
 		}
 
@@ -921,9 +939,14 @@ public class WdoView extends FrameView {
 		// special chars
 		if (ns != null && !ns.isEmpty()) {
 			State state = State.getInstance();
-			state.createWorkflow(ns);
-			if (ns.toLowerCase().startsWith("http:"))
-				CIServerCache.getInstance().hashURL(ns);
+			if (ns.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+				state.createWorkflow(ns, ns);
+			}
+			else {
+				state.createWorkflow(ns, null);	
+			}
+//			if (ns.toLowerCase().startsWith("http:"))
+//				CIServerCache.getInstance().hashURL(ns);
 			this.updateSelectedOWLDoc();
 			this.setMessage(resourceMap
 					.getString("createNewWorkflow.Action.success"));
@@ -1178,13 +1201,13 @@ public class WdoView extends FrameView {
 			ArrayList<String> urlList = new ArrayList<String>();
 			// if this is on a known server - just add the url
 			// if it is in cache - then get server id
-			String uri = state.getOntModelURI(ontmodel);
-			int serverId = CIServerCache.getInstance().getServerFromURL(uri);
-			if (serverId >= 0) {
-				urlList.add(uri);
-			} else {
+//			String uri = state.getOntModelURI(ontmodel);
+//			int serverId = CIServerCache.getInstance().getServerFromURL(uri);
+//			if (serverId >= 0) {
+//				urlList.add(uri);
+//			} else {
 				urlList.add(state.getOWLDocumentURL(ontmodel));
-			}
+//			}
 			return new SaveOWLDocumentTask(ontmodelList, urlList, false);
 		}
 		return null;
@@ -1201,13 +1224,13 @@ public class WdoView extends FrameView {
 			// only include ontologies that have been modified
 			if (temp != null && state.isModified(uri)) {
 				ontmodelList.add(temp);
-				int serverId = CIServerCache.getInstance()
-						.getServerFromURL(uri);
-				if (serverId >= 0) {
-					urlList.add(uri);
-				} else {
+//				int serverId = CIServerCache.getInstance()
+//						.getServerFromURL(uri);
+//				if (serverId >= 0) {
+//					urlList.add(uri);
+//				} else {
 					urlList.add(state.getOWLDocumentURL(temp));
-				}
+//				}
 			}
 		}
 		for (Iterator<String> i = state.listWorkflowURIs(); i.hasNext();) {
@@ -1216,13 +1239,13 @@ public class WdoView extends FrameView {
 			// only include workflows that have been modified
 			if (temp != null && state.isModified(uri)) {
 				ontmodelList.add(temp);
-				int serverId = CIServerCache.getInstance()
-						.getServerFromURL(uri);
-				if (serverId >= 0) {
-					urlList.add(uri);
-				} else {
+//				int serverId = CIServerCache.getInstance()
+//						.getServerFromURL(uri);
+//				if (serverId >= 0) {
+//					urlList.add(uri);
+//				} else {
 					urlList.add(state.getOWLDocumentURL(temp));
-				}
+//				}
 			}
 		}
 		if (!ontmodelList.isEmpty()) {
@@ -1319,7 +1342,7 @@ public class WdoView extends FrameView {
 
 	@Action
 	public void showCIDesktop() {
-		CIDesktop.showWindow();
+//		CIDesktop.showWindow();
 	}
 
 	// ////////////////// END ACTION METHODS ////////////////////
@@ -1328,7 +1351,9 @@ public class WdoView extends FrameView {
 	 * This method is called from within the constructor to initialize the form.
 	 */
 	private void initComponents() {
-
+//		selectedServerLabel = new javax.swing.JLabel("default");
+//		selectedProjectLabel = new javax.swing.JLabel("default");
+		
 		mainPanel = new javax.swing.JPanel();
 		mainSplitPane = new javax.swing.JSplitPane();
 		workspaceHorizontalSplitPane = new javax.swing.JSplitPane();
@@ -1414,8 +1439,8 @@ public class WdoView extends FrameView {
 		toolBarEditInstance = new javax.swing.JButton();
 		toolBarSave = new javax.swing.JButton();
 		toolBarSaveAll = new javax.swing.JButton();
-		toolBarWFTalk = new javax.swing.JButton();
-		toolBarCIDesktop = new javax.swing.JButton();
+//		toolBarWFTalk = new javax.swing.JButton();
+//		toolBarCIDesktop = new javax.swing.JButton();
 		toolBarSeparator1 = new javax.swing.JToolBar.Separator();
 		toolBarSeparator2 = new javax.swing.JToolBar.Separator();
 
@@ -2012,21 +2037,21 @@ public class WdoView extends FrameView {
 		toolBarEditInstance.setName("toolBarEditInstance"); // NOI18N
 		toolBar.add(toolBarEditInstance);
 
-		toolBarCIDesktop.setAction(actionMap.get("showCIDesktop"));
-		toolBarCIDesktop.setText(null);
-		toolBarCIDesktop.setFocusable(false);
-		toolBarCIDesktop.setMaximumSize(new java.awt.Dimension(27, 27));
-		toolBarCIDesktop.setMinimumSize(new java.awt.Dimension(27, 27));
-		toolBarCIDesktop.setName("toolBarCIDesktop"); // NOI18N
-		toolBar.add(toolBarCIDesktop);
-
-		toolBarWFTalk.setAction(actionMap.get("showWFTalkWindow"));
-		toolBarWFTalk.setText(null);
-		toolBarWFTalk.setFocusable(false);
-		toolBarWFTalk.setMaximumSize(new java.awt.Dimension(27, 27));
-		toolBarWFTalk.setMinimumSize(new java.awt.Dimension(27, 27));
-		toolBarWFTalk.setName("toolBarWFTalk"); // NOI18N
-		toolBar.add(toolBarWFTalk);
+//		toolBarCIDesktop.setAction(actionMap.get("showCIDesktop"));
+//		toolBarCIDesktop.setText(null);
+//		toolBarCIDesktop.setFocusable(false);
+//		toolBarCIDesktop.setMaximumSize(new java.awt.Dimension(27, 27));
+//		toolBarCIDesktop.setMinimumSize(new java.awt.Dimension(27, 27));
+//		toolBarCIDesktop.setName("toolBarCIDesktop"); // NOI18N
+//		toolBar.add(toolBarCIDesktop);
+//
+//		toolBarWFTalk.setAction(actionMap.get("showWFTalkWindow"));
+//		toolBarWFTalk.setText(null);
+//		toolBarWFTalk.setFocusable(false);
+//		toolBarWFTalk.setMaximumSize(new java.awt.Dimension(27, 27));
+//		toolBarWFTalk.setMinimumSize(new java.awt.Dimension(27, 27));
+//		toolBarWFTalk.setName("toolBarWFTalk"); // NOI18N
+//		toolBar.add(toolBarWFTalk);
 
 		setComponent(mainPanel);
 		setMenuBar(menuBar);
@@ -2156,6 +2181,19 @@ public class WdoView extends FrameView {
 			createProvenanceAnnotatorsWindow.setLocationRelativeTo(mainFrame);
 		}
 		return (CreateProvenanceAnnotators) createProvenanceAnnotatorsWindow;
+	}
+	
+	/**
+	 * Gets instance of the AlfrescoClient window. If first time called, initialize.
+	 * @return
+	 */
+	public AlfrescoClient getAlfrescoClient() {
+		if (aClient == null) {
+			JFrame mainFrame = WdoApp.getApplication().getMainFrame();
+			aClient = new AlfrescoClient(mainFrame);
+			aClient.setLocationRelativeTo(mainFrame);
+		}
+		return aClient;
 	}
 
 	/**
@@ -2449,67 +2487,6 @@ public class WdoView extends FrameView {
 		}
 		return ans;
 	}
-
+	
 	// /////////////// END UTILITY METHODS //////////////////////////
-
 }
-
-/*
- * @Action(enabledProperty = "ciServerDisconnected") public void
- * connectToCIServer() { selectACIServer(); setCiServerConnected(); }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void createCIProject()
- * {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void
- * checkOutCIProject() {
- * 
- * State state = State.getInstance(); CIClient aClient =
- * state.getSelectedCIServer();
- * 
- * ArrayList<String> projects =
- * CIGetProjectListDialog.showDialog(this.getFrame(), this.getFrame(),aClient);
- * CIUtils.ciPrintStrings(projects); }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void
- * addSawToCIProject() {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void saveCIProject() {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void openCIProject() {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void checkInCIProject()
- * {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void closeCIProject() {
- * 
- * }
- * 
- * @Action(enabledProperty = "ciServerConnected") public void
- * disconnectFromCIServer() { disconnectFromACIServer(); setCiServerConnected();
- * }
- * 
- * private void selectACIServer(){
- * 
- * CIClient aClient = CISelectServerDialog.showDialog(this.getFrame(),
- * this.getFrame()); if(aClient != null){ State state = State.getInstance();
- * state.setSelectedCIServer(aClient); } }
- * 
- * private void disconnectFromACIServer(){
- * 
- * CIClient aClient = null;
- * 
- * State state = State.getInstance(); state.setSelectedCIServer(aClient);
- * 
- * }
- */

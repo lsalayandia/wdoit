@@ -53,18 +53,18 @@ import javax.swing.JFrame;
 import com.hp.hpl.jena.ontology.OntModel;
 
 import edu.utep.cybershare.wdoit.context.State;
-import edu.utep.cybershare.ciclient.ciui.CIGetUP;
-import edu.utep.cybershare.ciclient.CIGet;
-import edu.utep.cybershare.ciclient.CIPut;
-import edu.utep.cybershare.ciclient.CIReturnObject;
-import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
+//import edu.utep.cybershare.ciclient.ciui.CIGetUP;
+//import edu.utep.cybershare.ciclient.CIGet;
+//import edu.utep.cybershare.ciclient.CIPut;
+//import edu.utep.cybershare.ciclient.CIReturnObject;
+//import edu.utep.cybershare.ciclient.ciconnect.CIKnownServerTable;
 
 public class WFTalkFrame extends JFrame implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	CIKnownServerTable servers = CIKnownServerTable.getInstance();
+//	CIKnownServerTable servers = CIKnownServerTable.getInstance();
 
 	private static WFTalkFrame wfTalkFrameWindow = null;
 	private JButton updateButton;
@@ -232,29 +232,29 @@ public class WFTalkFrame extends JFrame implements ActionListener {
 		String wfS = null; // the url of the server
 		String wfN = null; // the path of the workflow on the server
 		int serverId = -1;
-		if (wf != null) {
-			String wfURL = state.getOWLDocumentURL(wf);
-			serverId = servers.ciGetServerEntryFromURL(wfURL);
-			if (serverId > -1) {
-				wfS = servers.ciGetServerURL(serverId);
-				String stmp[] = wfURL.split(wfS + "/");
-				if (stmp[1] != null)
-					wfN = stmp[1];
-				if (servers.ciIsUsernamePasswordSet(serverId) == false) {
-					// try to setup a valid username/password
-					if (CIGetUP.showDialog(this, serverId) == false) {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"Username and password needed - command failed!",
-										"Error Message",
-										JOptionPane.ERROR_MESSAGE);
-					} else
-						uname = servers.ciGetServerUsername(serverId);
-				} else
-					uname = servers.ciGetServerUsername(serverId);
-			}
-		}
+//		if (wf != null) {
+//			String wfURL = state.getOWLDocumentURL(wf);
+//			serverId = servers.ciGetServerEntryFromURL(wfURL);
+//			if (serverId > -1) {
+//				wfS = servers.ciGetServerURL(serverId);
+//				String stmp[] = wfURL.split(wfS + "/");
+//				if (stmp[1] != null)
+//					wfN = stmp[1];
+//				if (servers.ciIsUsernamePasswordSet(serverId) == false) {
+//					// try to setup a valid username/password
+//					if (CIGetUP.showDialog(this, serverId) == false) {
+//						JOptionPane
+//								.showMessageDialog(
+//										this,
+//										"Username and password needed - command failed!",
+//										"Error Message",
+//										JOptionPane.ERROR_MESSAGE);
+//					} else
+//						uname = servers.ciGetServerUsername(serverId);
+//				} else
+//					uname = servers.ciGetServerUsername(serverId);
+//			}
+//		}
 		if (uname != null) {
 			name.setText(uname);
 			wfName.setText(wfN);
@@ -296,100 +296,99 @@ public class WFTalkFrame extends JFrame implements ActionListener {
 		if ("Settings".equals(e.getActionCommand())) {
 			State state = State.getInstance();
 			OntModel wf = state.getSelectedWorkflow();
-			if (wf != null) {
-				String wfURL = state.getOWLDocumentURL(wf);
-				int serverId = servers.ciGetServerEntryFromURL(wfURL);
-				if (serverId == -1) {
-					JOptionPane.showMessageDialog(this,
-							"Workflow not associated with a known CI Server",
-							"Error Message", JOptionPane.ERROR_MESSAGE);
-					name.setText("");
-					msgContents.setText("");
-					wfName.setText("");
-					serverName.setText("");
-				} else {
-					if (CIGetUP.showDialog(this, serverId) == false) {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"Username and password needed - command failed!",
-										"Error Message",
-										JOptionPane.ERROR_MESSAGE);
-						name.setText("");
-						msgContents.setText("");
-					}
-				}
-			}
+//			if (wf != null) {
+//				String wfURL = state.getOWLDocumentURL(wf);
+//				int serverId = servers.ciGetServerEntryFromURL(wfURL);
+//				if (serverId == -1) {
+//					JOptionPane.showMessageDialog(this,
+//							"Workflow not associated with a known CI Server",
+//							"Error Message", JOptionPane.ERROR_MESSAGE);
+//					name.setText("");
+//					msgContents.setText("");
+//					wfName.setText("");
+//					serverName.setText("");
+//				} else {
+//					if (CIGetUP.showDialog(this, serverId) == false) {
+//						JOptionPane
+//								.showMessageDialog(
+//										this,
+//										"Username and password needed - command failed!",
+//										"Error Message",
+//										JOptionPane.ERROR_MESSAGE);
+//						name.setText("");
+//						msgContents.setText("");
+//					}
+//				}
+//			}
 		}
-
 	}
 
 	private void updateMessageList() {
 		State state = State.getInstance();
 		OntModel wf = state.getSelectedWorkflow();
-		if (wf != null) {
-			String wfURL = state.getOWLDocumentURL(wf);
-			int serverId = servers.ciGetServerEntryFromURL(wfURL);
-			if (serverId != -1) {
-				// assure password is setup
-				if (servers.ciIsUsernamePasswordSet(serverId) == false) {
-					// try to setup a valid username/password
-					if (CIGetUP.showDialog(this, serverId) == false) {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"Username and password needed - command failed!",
-										"Error Message",
-										JOptionPane.ERROR_MESSAGE);
-						msgContents.setText("");
-						name.setText("");
-						return;
-					}
-				}
-				// valid login for this server - proceed with update
-				name.setText(servers.ciGetServerUsername(serverId));
-				// valid login for this message, proceed with getting the
-				// messages
-				// for the url on the server
-				CIReturnObject messageObject = CIGet.ciGetMessageList(wfURL);
-				if (messageObject.gStatus.equals("-1")) {
-					msgContents
-							.setText("Could not obtain a message list from server.");
-				} else {
-					ArrayList<String> messagelist = messageObject.gMessageList;
-					if (messagelist == null || messagelist.size() == 0) {
-						msgContents
-								.setText("no messages on server for this workflow");
-					} else {
-						String allMessages = "";
-						int farIndex = messagelist.size();
-						// want the reverse order of how the messages are
-						// retrieved - for now. Returned blog style and
-						// text area does not work like that
-						for (int index = farIndex - 1; index >= 0; index--) {
-							String oneMsg = messagelist.get(index) + "\n";
-							allMessages += oneMsg;
-						}
-						msgContents.setText(allMessages);
-					}
-					String wfS;
-					String wfN;
-					wfS = servers.ciGetServerURL(serverId);
-					serverName.setText(wfS);
-					String stmp[] = wfURL.split(wfS + "/");
-					if (stmp[1] != null) {
-						wfN = stmp[1];
-						wfName.setText(wfN);
-					}
-				}
-			} else {
-				msgContents.setText("");
-				name.setText("");
-			}
-		} else {
-			msgContents.setText("");
-			name.setText("");
-		}
+//		if (wf != null) {
+//			String wfURL = state.getOWLDocumentURL(wf);
+//			int serverId = servers.ciGetServerEntryFromURL(wfURL);
+//			if (serverId != -1) {
+//				// assure password is setup
+//				if (servers.ciIsUsernamePasswordSet(serverId) == false) {
+//					// try to setup a valid username/password
+//					if (CIGetUP.showDialog(this, serverId) == false) {
+//						JOptionPane
+//								.showMessageDialog(
+//										this,
+//										"Username and password needed - command failed!",
+//										"Error Message",
+//										JOptionPane.ERROR_MESSAGE);
+//						msgContents.setText("");
+//						name.setText("");
+//						return;
+//					}
+//				}
+//				// valid login for this server - proceed with update
+//				name.setText(servers.ciGetServerUsername(serverId));
+//				// valid login for this message, proceed with getting the
+//				// messages
+//				// for the url on the server
+//				CIReturnObject messageObject = CIGet.ciGetMessageList(wfURL);
+//				if (messageObject.gStatus.equals("-1")) {
+//					msgContents
+//							.setText("Could not obtain a message list from server.");
+//				} else {
+//					ArrayList<String> messagelist = messageObject.gMessageList;
+//					if (messagelist == null || messagelist.size() == 0) {
+//						msgContents
+//								.setText("no messages on server for this workflow");
+//					} else {
+//						String allMessages = "";
+//						int farIndex = messagelist.size();
+//						// want the reverse order of how the messages are
+//						// retrieved - for now. Returned blog style and
+//						// text area does not work like that
+//						for (int index = farIndex - 1; index >= 0; index--) {
+//							String oneMsg = messagelist.get(index) + "\n";
+//							allMessages += oneMsg;
+//						}
+//						msgContents.setText(allMessages);
+//					}
+//					String wfS;
+//					String wfN;
+//					wfS = servers.ciGetServerURL(serverId);
+//					serverName.setText(wfS);
+//					String stmp[] = wfURL.split(wfS + "/");
+//					if (stmp[1] != null) {
+//						wfN = stmp[1];
+//						wfName.setText(wfN);
+//					}
+//				}
+//			} else {
+//				msgContents.setText("");
+//				name.setText("");
+//			}
+//		} else {
+//			msgContents.setText("");
+//			name.setText("");
+//		}
 	}
 
 	private boolean sendMessage(String msg) {
@@ -397,46 +396,46 @@ public class WFTalkFrame extends JFrame implements ActionListener {
 
 		State state = State.getInstance();
 		OntModel wf = state.getSelectedWorkflow();
-		if (wf != null) {
-			String wfURL = state.getOWLDocumentURL(wf);
-			int serverId = servers.ciGetServerEntryFromURL(wfURL);
-			if (serverId > -1) {
-				// assure password is setup
-				if (servers.ciGetServerAuthSession(serverId) == null) {
-					if (CIGetUP.showDialog(this, serverId) == false) {
-						JOptionPane.showMessageDialog(this,
-								"Could not authenticate with server!",
-								"Error Message", JOptionPane.ERROR_MESSAGE);
-						msgContents.setText("");
-						name.setText("");
-						return returnValue;
-					}
-				}
-				// valid login for this server - proceed with sending
-				name.setText(servers.ciGetServerUsername(serverId));
-				// message for this url on the server
-				CIReturnObject ro = CIPut.ciSendComment(wfURL, msg);
-				if (ro.gStatus.equals("-1"))
-					return false;
-				else
-					returnValue = true;
-				String wfS;
-				String wfN;
-				wfS = servers.ciGetServerURL(serverId);
-				serverName.setText(wfS);
-				String stmp[] = wfURL.split(wfS + "/");
-				if (stmp[1] != null) {
-					wfN = stmp[1];
-					wfName.setText(wfN);
-				}
-			} else {
-				msgContents.setText("");
-				name.setText("");
-			}
-		} else {
-			msgContents.setText("");
-			name.setText("");
-		}
+//		if (wf != null) {
+//			String wfURL = state.getOWLDocumentURL(wf);
+//			int serverId = servers.ciGetServerEntryFromURL(wfURL);
+//			if (serverId > -1) {
+//				// assure password is setup
+//				if (servers.ciGetServerAuthSession(serverId) == null) {
+//					if (CIGetUP.showDialog(this, serverId) == false) {
+//						JOptionPane.showMessageDialog(this,
+//								"Could not authenticate with server!",
+//								"Error Message", JOptionPane.ERROR_MESSAGE);
+//						msgContents.setText("");
+//						name.setText("");
+//						return returnValue;
+//					}
+//				}
+//				// valid login for this server - proceed with sending
+//				name.setText(servers.ciGetServerUsername(serverId));
+//				// message for this url on the server
+//				CIReturnObject ro = CIPut.ciSendComment(wfURL, msg);
+//				if (ro.gStatus.equals("-1"))
+//					return false;
+//				else
+//					returnValue = true;
+//				String wfS;
+//				String wfN;
+//				wfS = servers.ciGetServerURL(serverId);
+//				serverName.setText(wfS);
+//				String stmp[] = wfURL.split(wfS + "/");
+//				if (stmp[1] != null) {
+//					wfN = stmp[1];
+//					wfName.setText(wfN);
+//				}
+//			} else {
+//				msgContents.setText("");
+//				name.setText("");
+//			}
+//		} else {
+//			msgContents.setText("");
+//			name.setText("");
+//		}
 		// only reach here if no workflow selected
 		return returnValue;
 	}

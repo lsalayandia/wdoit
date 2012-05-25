@@ -29,19 +29,21 @@ modification, are permitted provided that the following conditions are met:
 	
 	<!-- global properties -->
 	<property name="wdo" location="${basedir}"/>
-	<property name="wdo_src" location="${wdo}/src"/>
-	<property name="lib" location="${basedir}/../lib"/>
-	<property name="wdo_lib" location="${wdo}/lib"/>
-	<property name="wdo_build" location="${wdo}/bin"/>
-	<property name="wdo_doc" location="${wdo}/doc"/>
-	<property name="wdo_dist" location="${wdo}/dist"/>
+	<property name="wdo_src" location="${wdo}${file.separator}src"/>
+	<property name="wdo_lib" location="${wdo}${file.separator}lib"/>
+	<property name="wdo_build" location="${wdo}${file.separator}bin"/>
+	<property name="wdo_doc" location="${wdo}${file.separator}doc"/>
+	<property name="wdo_dist" location="${wdo}${file.separator}dist"/>
+	<property name="wdo_dist_lib" location="${wdo_dist}${file.separator}lib"/>
 	<property name="jar_filename" value="wdo.jar"/>
 	<property name="zip_filename" value="wdo.zip"/>
 	<property name="signjar_alias" value="mykey"/>
-	<property name="signjar_storepass" value="temp08!"/>
-	<property name="signjar_keystore" value=".keystore"/>
 	
-	<property name="ciclient" location="${lib}/ciclient"/>	
+	<!-- Specify location of your keystore and pass to sign jars -->
+	<property name="signjar_storepass" value="temp08!"/>
+	<property name="signjar_keystore" value="${user.home}${file.separator}.keystore"/>
+	
+	<!--<property name="ciclient" location="${lib}${file.separator}ciclient"/>-->	
 	
 	<!-- clean task -->
 	<target name="wdo_clean" description="delete all generated files" >
@@ -59,7 +61,8 @@ modification, are permitted provided that the following conditions are met:
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac srcdir="${wdo_src}" destdir="${wdo_build}" source="1.6" target="1.6">
 			<classpath>
-				<fileset dir="${lib}">
+				<!--<fileset dir="${lib}">-->
+				<fileset dir="${wdo_lib}">
 					<include name="**/*.jar"/>
 				</fileset>
 			</classpath>
@@ -99,92 +102,89 @@ modification, are permitted provided that the following conditions are met:
 	<target name="wdo_dist" depends="wdo_build" description="generate the distribution">
 		<!-- create distribution directory -->
 		<mkdir dir="${wdo_dist}"/>
-		<mkdir dir="${wdo_dist}/lib"/>
-		<!-- copy jars and other files to distribution lib folder -->
-		<copy todir="${wdo_dist}/lib">
-			<fileset dir="${lib}/apache" includes="commons-codec-1.4.jar,ws-commons-util-1.0.2.jar,xmlrpc-client-3.1.2.jar,xmlrpc-common-3.1.2.jar" />
-<!-- exclude ciserver for now			<fileset dir="${lib}/ciclient" defaultexcludes="yes" /> -->
-			<fileset dir="${lib}/data-annotator" defaultexcludes="yes" />
-			<fileset dir="${lib}/jena262" defaultexcludes="yes" />
-			<fileset dir="${lib}/jgraph" includes="jgraph.jar" />
-			<fileset dir="${lib}/pml2" includes="pml-lightweight.jar" />
-			<fileset dir="${lib}/swing" defaultexcludes="yes" />
-			<fileset dir="${lib}/util" includes="soap.jar" />
-			<fileset dir="${wdo_lib}" defaultexcludes="yes" />
-		</copy>	
+		<mkdir dir="${wdo_dist_lib}"/>
+		<!-- copy jars to distribution lib folder -->
+		<!-- excludes ciclient jar for now -->
+		<copy todir="${wdo_dist_lib}">
+			<fileset dir="${wdo_lib}" defaultexcludes="yes" excludes="ciclient.jar">
+				<filename name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
 		<!-- create wdo jar -->
-		<manifest file="${wdo_dist}/MANIFEST.MF">
-<!-- exclude ciserver for now	<attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\ciclient.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>-->
-			                    <attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>
+		<manifest file="${wdo_dist}${file.separator}MANIFEST.MF">
+            <!-- exclude ciserver for now	<attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\ciclient.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>-->
+		    <attribute name="Class-Path" value="${jar_filename} lib\activation-1.0.2.jar lib\appframework-1.0.3.jar lib\arq-2.8.3.jar lib\aterm-java-1.6.jar lib\axis-1.4.jar lib\axis-wsdl4j-1.5.1.jar lib\commons-codec-1.4.jar lib\commons-discovery-0.2.jar lib\commons-httpclient-3.1_2.jar lib\dataAnnotator.jar lib\icu4j-3.4.4.jar lib\iri-0.7.jar lib\jaxrpc-api-1.1.jar lib\jcl-over-slf4j-1.5.8.jar lib\jena-2.6.2.jar lib\jgraph.jar lib\jgrapht-jdk1.5-0.7.3.jar lib\junit-4.5.jar lib\log4j-1.2.14.jar lib\lucene-core-2.3.1.jar lib\owls-api-3.0.jar lib\pellet-2.0.jar lib\pml-lightweight.jar lib\relaxngDatatype-20020414.jar lib\saaj-api-1.2.jar lib\slf4j-api-1.5.8.jar lib\slf4j-log4j12-1.5.8.jar lib\stax-api-1.0.1.jar lib\swing-worker-1.1.jar lib\upnp-1.0.jar lib\wstx-asl-3.2.9.jar lib\ws-commons-util-1.0.2.jar lib\xercesImpl-2.7.1.jar lib\xmlrpc-client-3.1.2.jar lib\xmlrpc-common-3.1.2.jar lib\xsdlib-20030225.jar"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Main-Class" value="edu.utep.cybershare.wdoit.WdoApp"/>
 		</manifest>
-		<jar jarfile="${wdo_dist}/${jar_filename}" manifest="${wdo_dist}/MANIFEST.MF" index="yes">		
+		<jar jarfile="${wdo_dist}${file.separator}${jar_filename}" manifest="${wdo_dist}${file.separator}MANIFEST.MF" index="yes">		
 		    <fileset dir="${wdo_build}" defaultexcludes="yes"/> <!-- includes all .class files and resource files -->
 			<fileset dir="${wdo_lib}" excludes="**/*.jar" defaultexcludes="yes"/> <!-- includes all aux files, i.e., report templates, etc. -->
 		</jar>
 		<delete file="${wdo_dist}/MANIFEST.MF"/>
 		
-		<!-- sign jar files from wdo -->
-		<signjar jar="${wdo_dist}/${jar_filename}" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/activation-1.0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/appframework-1.0.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/arq-2.8.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/aterm-java-1.6.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/axis-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/axis-wsdl4j-1.5.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<!-- exclude ciserver for now <signjar jar="${wdo_dist}/lib/ciclient.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>-->
-		<signjar jar="${wdo_dist}/lib/commons-codec-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/commons-discovery-0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/dataAnnotator.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/icu4j-3.4.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/iri-0.7.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/jaxrpc-api-1.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/jcl-over-slf4j-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/jena-2.6.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/jgraph.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/jgrapht-jdk1.5-0.7.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/junit-4.5.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/log4j-1.2.14.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/lucene-core-2.3.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/owls-api-3.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/pellet-2.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/pml-lightweight.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/relaxngDatatype-20020414.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/saaj-api-1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/slf4j-api-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/slf4j-log4j12-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/soap.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/stax-api-1.0.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/swing-worker-1.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/upnp-1.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/wstx-asl-3.2.9.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/ws-commons-util-1.0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/xercesImpl-2.7.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/xmlrpc-client-3.1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/xmlrpc-common-3.1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
-		<signjar jar="${wdo_dist}/lib/xsdlib-20030225.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<!-- sign wdo.jar and all other dependency jar files so that they can be used with JNLP -->
+		<signjar jar="${wdo_dist}${file.separator}${jar_filename}" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}activation-1.0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}appframework-1.0.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}arq-2.8.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}aterm-java-1.6.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}axis-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}axis-wsdl4j-1.5.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<!-- exclude ciserver for now <signjar jar="${wdo_dist_lib}${file.separator}ciclient.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>-->
+		<signjar jar="${wdo_dist_lib}${file.separator}commons-codec-1.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}commons-discovery-0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}commons-httpclient-3.1_2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}dataAnnotator.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}icu4j-3.4.4.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}iri-0.7.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}jaxrpc-api-1.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}jcl-over-slf4j-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}jena-2.6.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}jgraph.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}jgrapht-jdk1.5-0.7.3.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}junit-4.5.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}log4j-1.2.14.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}lucene-core-2.3.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}wls-api-3.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}pellet-2.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}pml-lightweight.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}relaxngDatatype-20020414.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}saaj-api-1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}slf4j-api-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}slf4j-log4j12-1.5.8.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}soap.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}stax-api-1.0.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}swing-worker-1.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}upnp-1.0.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}wstx-asl-3.2.9.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}ws-commons-util-1.0.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}xercesImpl-2.7.1.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}xmlrpc-client-3.1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}xmlrpc-common-3.1.2.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
+		<signjar jar="${wdo_dist_lib}${file.separator}xsdlib-20030225.jar" alias="${signjar_alias}" storepass="${signjar_storepass}" keystore="${signjar_keystore}"/>
 		
 		<!-- Create alternative distribution as a zip file -->
 		<copy todir="${wdo_dist}">
 			<fileset dir="${wdo}" includes="runme.*" />
 		</copy>
 		<!-- extra directory (empty) -->
-		<zip destfile="${wdo_dist}/wdo.zip" basedir="${wdo_dist}" includes="runme.*, ${jar_filename}, lib/*" />
+		<zip destfile="${wdo_dist}${file.separator}wdo.zip" basedir="${wdo_dist}" includes="runme.*, ${jar_filename}, lib/*" />
 		<!-- need appcode for distribution -->
 		<copy todir="${wdo_dist}">
 			<fileset dir="${wdo}" includes="*.jnlp" />
 		</copy>
-		<mkdir dir="${wdo_dist}/appcode"/>
-		<move file="${wdo_dist}/${jar_filename}" preservelastmodified="true" todir="${wdo_dist}/appcode"/>
-		<mkdir dir="${wdo_dist}/appcode/lib"/>
-		<move todir="${wdo_dist}/appcode/lib" preservelastmodified="true" >
-			<fileset dir="${wdo_dist}/lib"/>
+		<mkdir dir="${wdo_dist}${file.separator}appcode"/>
+		<move file="${wdo_dist}${file.separator}${jar_filename}" preservelastmodified="true" todir="${wdo_dist}/appcode"/>
+		<mkdir dir="${wdo_dist}${file.separator}appcode${file.separator}lib"/>
+		<move todir="${wdo_dist}${file.separator}appcode${file.separator}lib" preservelastmodified="true" >
+			<fileset dir="${wdo_dist_lib}"/>
 		</move>
 		
 		<!-- Clean up dist directory - ready to copy to web location -->
 		<delete>
-			<fileset dir="${wdo_dist}" includes="runme.*, ${jar_filename}, lib/*"/>
+		    <fileset dir="${wdo_dist}" includes="runme.*, ${jar_filename}, lib/*"/>
 		</delete>
 	</target>
 </project>

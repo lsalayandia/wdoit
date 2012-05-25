@@ -53,6 +53,7 @@ modification, are permitted provided that the following conditions are met:
 <!-- exclude ciserver for now		<jar href="appcode/lib/ciclient.jar"/>-->
 		<jar href="appcode/lib/commons-codec-1.4.jar"/>
 		<jar href="appcode/lib/commons-discovery-0.2.jar"/>
+		<jar href="appcode/lib/commons-httpclient-3.1_2.jar"/>
 		<jar href="appcode/lib/dataAnnotator.jar"/>
 		<jar href="appcode/lib/icu4j-3.4.4.jar"/>
 		<jar href="appcode/lib/iri-0.7.jar"/>

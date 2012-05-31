@@ -156,29 +156,56 @@ public class AlfrescoClient extends JDialog {
 	/**
 	 * create a blank node and return the URI in order to 
 	 * later add content to it.
-	 * @return URI of node
+	 * @param dialogURI Optional parameter to include in dialog title.
+	 * @return URL of node
 	 */
-	public String createNode() {
+	public String createNode(String dialogURI) {
 		if (!attemptLogin()) {
 			return null;
 		}
 		
 		String filename = null;
-		boolean filenameExists;
+		boolean filenameChosen = false;
 		do {
-			filename = (String) JOptionPane.showInputDialog(this.getFocusOwner(),
-					"Name of new Ontology?",
-					"New Ontology",
-					JOptionPane.QUESTION_MESSAGE, null, null, null);
+			String dialogTitle = null;
+			if (dialogURI != null && !dialogURI.isEmpty()) {
+				String splitURI[] = dialogURI.split("/");
+				dialogTitle = splitURI[splitURI.length-1];
+				filename = (String) JOptionPane.showInputDialog(this.getFocusOwner(),
+						"Filename for " + dialogTitle,
+						"Filename for Ontology/Workflow",
+						JOptionPane.QUESTION_MESSAGE, null, null, dialogTitle);
+			}
+			else {
+				filename = (String) JOptionPane.showInputDialog(this.getFocusOwner(),
+						"Filename for Ontology/Workflow",
+						"Filename for Ontology/Workflow",
+						JOptionPane.QUESTION_MESSAGE, null, null, null);
+			}
+			
+			
 			if (filename == null) {
 				return null;
 			}
 			
-			filenameExists = getObjectUuid("Projects/" + project + "/" + filename) != null;
+			boolean filenameExists = getObjectUuid("Projects/" + project + "/" + filename) != null;
 			if (filenameExists) {
-				JOptionPane.showMessageDialog(this.getFocusOwner(), "File already exists. Please choose another name or cancel.");	
+				int ans = JOptionPane.showConfirmDialog(this.getFocusOwner(), 
+						"File already exists. Do you want to overwrite?", 
+						"Confirm Action", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (ans == 0) {
+					// overwrite
+					return alfrescoBaseUrl + "/d/a/workspace/SpacesStore/" + getObjectUuid("Projects/" + project + "/" + filename) + "/" + filename;
+				}
+				else if (ans == 2) {
+					// cancel
+					return null;
+				}
 			}
-		} while (filenameExists);
+			else {
+				filenameChosen = true;
+			}
+		} while (!filenameChosen);
 		
 		StringBuilder createNodeURL = getDerivAWebScriptUrl();
 		createNodeURL.append("createNode");
@@ -196,7 +223,6 @@ public class AlfrescoClient extends JDialog {
 			executeMethod(getMethod);
 
 			return alfrescoBaseUrl + "/d/a/workspace/SpacesStore/" + getObjectUuid("Projects/" + project + "/" + filename) + "/" + filename;
-//			return getMethod.getResponseBodyAsString();
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);

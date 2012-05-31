@@ -781,8 +781,10 @@ public class WdoView extends FrameView {
 				}
 				if (!ontmodelList.isEmpty()) {
 					// initialize the save call
+//					Task<Void, Void> tsk = new SaveOWLDocumentTask(
+//							ontmodelList, urlList, false);
 					Task<Void, Void> tsk = new SaveOWLDocumentTask(
-							ontmodelList, urlList, false);
+							ontmodelList, urlList);
 					// since this is an action command - must specifically run
 					// the task
 					tsk.run();
@@ -845,18 +847,19 @@ public class WdoView extends FrameView {
 //		CIKnownServerTable kst = CIKnownServerTable.getInstance();
 //		Object[] options = new String[kst.ciKnownServerTableSize() + 1];
 		Object[] options = new String[2];
-		options[0] = resourceMap.getString("createNew.Action.locationOption1"); // default option
-		options[1] = resourceMap.getString("createNew.Action.locationOption2");
+		options[0] = resourceMap.getString("createNew.Action.locationOption1"); // default option, local file system
+		options[1] = resourceMap.getString("createNew.Action.locationOption2"); // web server
 //		int i = 0;
 //		for (; i < kst.ciKnownServerTableSize(); i++)
 //			options[i + 1] = (Object) kst.ciGetServerURL(i);
 
-		String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
+		String ns = null;
+		String option = (String) JOptionPane.showInputDialog(this.getComponent(),
 				resourceMap.getString("createNew.Action.locationConfirm"),
 				resourceMap.getString("createNew.Action.locationTitle"), 
 				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-		if (ns != null && !ns.isEmpty()) {
-			if (ns.equals((String) options[0])) {
+		if (option != null && !option.isEmpty()) {
+			if (option.equals((String) options[0])) {
 				JFrame mainFrame = WdoApp.getApplication().getMainFrame();
 				EditNamespace editNamespaceWindow = new EditNamespace(
 						mainFrame,
@@ -864,7 +867,7 @@ public class WdoView extends FrameView {
 				ns = editNamespaceWindow.getNamespace();
 			} else {
 				AlfrescoClient ac = getAlfrescoClient();
-				ns = ac.createNode();
+				ns = ac.createNode(null);
 				// select the project and add a resource name
 				// ns = CINewResourceNameDialog.showDialog(this.getComponent(),
 				// this.getComponent(), ns);
@@ -875,7 +878,7 @@ public class WdoView extends FrameView {
 
 		if (ns != null && !ns.isEmpty()) {
 			try {
-				if (ns.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+				if (option.equals((String) options[1])) {
 					State.getInstance().createWDO(ns, ns);
 				}
 				else {
@@ -909,13 +912,15 @@ public class WdoView extends FrameView {
 //		options[0] = (Object) new String("Local Filesystem");
 //		for (; i < kst.ciKnownServerTableSize(); i++)
 //			options[i + 1] = (Object) kst.ciGetServerURL(i);
-		String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
+		
+		String ns = null;
+		String option = (String) JOptionPane.showInputDialog(this.getComponent(),
 				resourceMap.getString("createNew.Action.locationConfirm"),
 				resourceMap.getString("createNew.Action.locationTitle"), 
 				JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
-		if (ns != null && !ns.isEmpty()) {
-			if (ns.equals((String) options[0])) {
+		if (option != null && !option.isEmpty()) {
+			if (option.equals((String) options[0])) {
 				JFrame mainFrame = WdoApp.getApplication().getMainFrame();
 				EditNamespace editNamespaceWindow = new EditNamespace(
 						mainFrame,
@@ -924,7 +929,7 @@ public class WdoView extends FrameView {
 				ns = editNamespaceWindow.getNamespace();
 			} else {
 				AlfrescoClient ac = getAlfrescoClient();
-				ns = ac.createNode();
+				ns = ac.createNode(null);
 				// select the project and add a resource name
 				// ns = CINewResourceNameDialog.showDialog(this.getComponent(),
 				// this.getComponent(), ns);
@@ -939,7 +944,7 @@ public class WdoView extends FrameView {
 		// special chars
 		if (ns != null && !ns.isEmpty()) {
 			State state = State.getInstance();
-			if (ns.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
+			if (option.equals((String) options[1])) {
 				state.createWorkflow(ns, ns);
 			}
 			else {
@@ -1208,7 +1213,8 @@ public class WdoView extends FrameView {
 //			} else {
 				urlList.add(state.getOWLDocumentURL(ontmodel));
 //			}
-			return new SaveOWLDocumentTask(ontmodelList, urlList, false);
+//			return new SaveOWLDocumentTask(ontmodelList, urlList, false);
+			return new SaveOWLDocumentTask(ontmodelList, urlList);
 		}
 		return null;
 	}
@@ -1249,7 +1255,8 @@ public class WdoView extends FrameView {
 			}
 		}
 		if (!ontmodelList.isEmpty()) {
-			return new SaveOWLDocumentTask(ontmodelList, urlList, false);
+//			return new SaveOWLDocumentTask(ontmodelList, urlList, false);
+			return new SaveOWLDocumentTask(ontmodelList, urlList);
 		} else {
 			return null;
 		}
@@ -1257,8 +1264,6 @@ public class WdoView extends FrameView {
 
 	@Action(enabledProperty = "owlDocumentSelected")
 	public Task<Void, Void> saveAs() {
-		// for the purposes of ciserver - can not do saveas due to
-		// dependencies between files. -- maybe later??
 		State state = State.getInstance();
 		OntModel ontmodel = state.getSelectedOWLDocument();
 		if (ontmodel != null) {
@@ -1266,7 +1271,27 @@ public class WdoView extends FrameView {
 			ontmodelList.add(ontmodel);
 			ArrayList<String> urlList = new ArrayList<String>();
 			urlList.add(null);
-			return new SaveOWLDocumentTask(ontmodelList, urlList, true);
+			return new SaveOWLDocumentTask(ontmodelList, urlList);
+			
+//			ResourceMap resourceMap = Application.getInstance(WdoApp.class)
+//					.getContext().getResourceMap(WdoView.class);
+//			Object[] options = new String[2];
+//			options[0] = resourceMap.getString("createNew.Action.locationOption1"); // default option
+//			options[1] = resourceMap.getString("createNew.Action.locationOption2");
+//			String ns = (String) JOptionPane.showInputDialog(this.getComponent(),
+//					resourceMap.getString("createNew.Action.locationConfirm"),
+//					resourceMap.getString("createNew.Action.locationTitle"), 
+//					JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+//			if (ns != null && !ns.isEmpty()) {
+//				if (ns.equals((String) options[0])) {
+//					urlList.add(null);
+//				} else {
+//					AlfrescoClient ac = getAlfrescoClient();
+//					ns = ac.createNode();
+//					urlList.add(ns);
+//				}
+//				return new SaveOWLDocumentTask(ontmodelList, urlList, true);
+//			}			
 		}
 		return null;
 	}

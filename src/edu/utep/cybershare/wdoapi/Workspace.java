@@ -729,10 +729,6 @@ public class Workspace {
 			}
 			ontmodel.getBaseModel().write(fileout, null, null);
 			fileout.close();
-			
-			
-			
-			
 
 			// register latest saved URL with the URI of the model
 			ontModelSpec.getDocumentManager().addAltEntry(uri, url);

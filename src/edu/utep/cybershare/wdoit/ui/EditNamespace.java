@@ -64,7 +64,7 @@ public class EditNamespace extends JDialog {
 
 	private javax.swing.JButton cancelButton;
 	private NamespaceTextField nsBody;
-	private javax.swing.JComboBox<String> nsProtocol;
+	private javax.swing.JComboBox nsProtocol;
 	private javax.swing.JButton okButton;
 	private javax.swing.JLabel titleLabel;
 	private javax.swing.JLabel warningLabel;

@@ -38,6 +38,7 @@ import org.jdesktop.application.Task;
 import com.hp.hpl.jena.ontology.OntModel;
 
 import edu.utep.cybershare.util.AlfrescoClient;
+import edu.utep.cybershare.util.UpdateBaseURI;
 import edu.utep.cybershare.wdoapi.Workspace;
 import edu.utep.cybershare.wdoapi.util.Namespace;
 import edu.utep.cybershare.wdoit.WdoApp;
@@ -132,6 +133,15 @@ public class SaveOWLDocumentTask extends Task<Void, Void> {
 				if (url.startsWith(Namespace.NS_PROTOCOLS.http.toString())) {
 					// upload temp file created to web server
 					File file = new File(System.getProperty("user.home") + File.separator + "wdoit.temp");
+					// if URI of ontology does not match URL
+					if (!uri.equalsIgnoreCase(url)) {
+						int ans = JOptionPane.showConfirmDialog(wdoView.getComponent(), 
+								"Do you want to update the URIs of the ontology to match the new store location?\nPlease be aware that updating URIs may break dependent ontologies.\nYou will also need to reload the updated ontology for URI updates to take effect.", 
+								"Confirm Action", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+						if (ans == 0) { // if yes
+							UpdateBaseURI.updateFile(file, url);
+						}	
+					}					
 					wdoView.getAlfrescoClient().updateFile(url, file);					
 				}
 				count++;

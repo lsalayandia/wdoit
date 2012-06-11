@@ -137,6 +137,31 @@ public class UpdateBaseURI {
 			ex.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 
+	 * @param file
+	 * @param uri
+	 * @throws IOException
+	 */
+	static public void updateFile(File file, String uri) throws IOException {
+		// construct replacement URI from baseURI
+		String newURI;
+		if (uri.endsWith(URI_SEPARATOR)) {
+			newURI = uri.substring(0, uri.length() - 1);
+		}
+		else {
+			newURI = uri;
+		}
+		String[] temp = getUriAndContent(file);
+		String oldURI = temp[0];
+		String content = temp[1];
+		content = replaceURIs(content, oldURI, newURI);
+		
+		BufferedWriter output = new BufferedWriter(new FileWriter(file));
+		output.write(content);
+		output.close();
+	}
 
 	/**
 	 * Reads a text file, assuming it is an OWL document, and returns a string
@@ -148,7 +173,7 @@ public class UpdateBaseURI {
 	 *         URI or null if not found, and the second element containing the
 	 *         content of the file or null if it cannot read.
 	 */
-	static String[] getUriAndContent(File file) {
+	static public String[] getUriAndContent(File file) {
 		String[] uriAndContent = { null, null };
 		try {
 			BufferedReader input = new BufferedReader(new FileReader(file));

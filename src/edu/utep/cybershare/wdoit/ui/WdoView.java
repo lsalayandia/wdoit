@@ -33,7 +33,6 @@ import edu.utep.cybershare.wdoit.ui.WFTalkFrame;
 //import edu.utep.cybershare.ciclient.ciui.CINewResourceNameDialog;
 
 import edu.utep.cybershare.wdoapi.metamodel.WDO_Metamodel;
-import edu.utep.cybershare.wdoapi.util.Namespace;
 import edu.utep.cybershare.wdoapi.SAW;
 import edu.utep.cybershare.wdoapi.WDO;
 import edu.utep.cybershare.wdoapi.Workspace;
